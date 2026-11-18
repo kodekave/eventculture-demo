@@ -1,0 +1,1159 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>EventCulture AI - interactive demo</title>
+<meta name="description" content="Interactive demo of the EventCulture AI platform. All content is dummy data.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..700&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>:root{--ink:#000;--paper:#fff;--mist:#f7f7f7;--chalk:#e6e6e6;--pink:#d6336c;--pinkd:#b82a5b;--lilac:#ffb6ef;--yellow:#ffd12e;--maroon:#4e080c;--muted:#6e6262;--ok:#1f7a45;--warn:#b7791f;--rose:#d6336c;--r:16px;--sh:0 12px 34px rgba(0,0,0,.12)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.55 "Nunito Sans",ui-sans-serif,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:"Bricolage Grotesque","Nunito Sans",ui-sans-serif,sans-serif;font-weight:500;line-height:1.08;margin:0 0 .5em;letter-spacing:-.02em}
+h1{font-size:clamp(2.3rem,5.4vw,4rem)}h2{font-size:clamp(1.7rem,3.4vw,2.5rem)}h3{font-size:1.2rem}
+a{color:inherit}p{margin:0 0 1em}.acc{color:var(--pink)}
+.mono{font:italic 600 .9rem "Nunito Sans",sans-serif;color:var(--maroon);margin-bottom:6px}
+.wrap{max-width:1160px;margin:0 auto;padding:0 20px}.sec{padding:76px 0}.sec.alt{background:var(--mist)}.sec.dark{background:#000;color:#fff}
+.center{text-align:center}.muted{color:var(--muted)}.small{font-size:.86rem}.sp{height:14px}
+.grid{display:grid;gap:18px}.g2{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}
+@media(max-width:900px){.g3,.g4{grid-template-columns:repeat(2,1fr)}.g2{grid-template-columns:1fr}}
+@media(max-width:600px){.g3,.g4{grid-template-columns:1fr}.sec{padding:48px 0}}
+/* demo bar */
+#demobar{position:sticky;top:0;z-index:60;background:#111;color:#fff;font-size:.8rem}
+#demobar .in{max-width:1160px;margin:0 auto;padding:7px 20px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+#demobar .tagd{background:var(--yellow);color:#000;font:800 .68rem "Nunito Sans";letter-spacing:.1em;padding:2px 8px;border-radius:99px}
+#demobar .roles{display:flex;gap:4px;margin-left:auto;flex-wrap:wrap}
+#demobar button{background:transparent;border:1px solid rgba(255,255,255,.35);color:#fff;border-radius:99px;padding:3px 11px;font:inherit;cursor:pointer}
+#demobar button.on{background:var(--pink);color:#fff;border-color:var(--pink)}#demobar button:hover{border-color:#fff}
+/* header */
+#hdr{position:sticky;top:34px;z-index:50;background:var(--mist);border-bottom:1px solid var(--chalk)}
+#hdr .in{max-width:1160px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;gap:18px}
+.logo{font:600 1.15rem "Bricolage Grotesque",sans-serif;text-decoration:none;white-space:nowrap;letter-spacing:-.01em}
+.nav{display:flex;gap:6px;flex-wrap:wrap;margin:0 auto}
+.nav a{text-decoration:none;padding:6px 10px;font-size:.92rem;font-weight:600;color:#222;border-bottom:2px solid transparent}
+.nav a:hover{color:var(--pink)}.nav a.on{border-bottom-color:#000}
+.hr{display:flex;gap:8px;align-items:center}
+@media(max-width:900px){#hdr .in{flex-wrap:wrap}.nav{order:3;width:100%;margin:0}}
+@media(max-width:700px){#hdr{position:static}#toast{bottom:80px}}
+/* buttons */
+.btn{display:inline-flex;align-items:center;gap:8px;border:1.5px solid #000;background:#fff;color:#000;padding:10px 20px;border-radius:30px;font:700 .95rem "Nunito Sans",sans-serif;cursor:pointer;text-decoration:none;transition:transform .12s,background .12s}
+.btn:hover{transform:translateY(-1px)}.btn.p{background:var(--pink);color:#fff;border-color:var(--pink)}.btn.p:hover{background:var(--pinkd);border-color:var(--pinkd)}
+.btn.b{background:var(--yellow);border-color:var(--yellow)}.btn.sm{padding:6px 14px;font-size:.84rem}.btn.lg{padding:14px 28px;font-size:1.02rem}
+.btn[disabled],.btn.dis{opacity:.4;pointer-events:none}
+.link{background:none;border:0;padding:0;color:var(--pink);text-decoration:underline;cursor:pointer;font:inherit}
+/* cards */
+.card{background:var(--mist);border:0;border-radius:var(--r);padding:22px}
+.card.flat{background:transparent}.card h3{margin-bottom:.3em}
+.badge{display:inline-flex;align-items:center;gap:5px;font:700 .72rem "Nunito Sans";padding:3px 10px;border-radius:99px;background:#ececec;color:#000}
+.badge.ok{background:#dff1e4;color:#1d5a37}.badge.warn{background:#fff0c2;color:#7a5410}.badge.draft{background:var(--yellow)}.badge.bad{background:#fbd9e4;color:#9d1f4a}
+.chip{display:inline-block;padding:5px 13px;border:1.5px solid var(--chalk);border-radius:99px;font-size:.88rem;font-weight:600;background:#fff;cursor:pointer}.chip.on{background:#000;color:#fff;border-color:#000}
+.step{display:flex;gap:12px}.step b{font:700 .8rem "Nunito Sans";color:var(--maroon)}
+/* hero */
+.hero{padding:56px 0 44px;background:#fff}.hero .grid{grid-template-columns:1.05fr 1fr;align-items:center;gap:44px}
+@media(max-width:900px){.hero .grid{grid-template-columns:1fr}}
+.cmp{position:relative;border-radius:20px;overflow:hidden;background:#ddd;aspect-ratio:3/2;box-shadow:var(--sh)}
+.cmp canvas{position:absolute;inset:0;width:100%;height:100%}.cmp .top{clip-path:inset(0 50% 0 0)}
+.cmp input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:ew-resize;margin:0}
+.cmp .hd{position:absolute;top:0;bottom:0;left:50%;width:3px;background:#fff;pointer-events:none}
+.cmp .hd::after{content:"\2194";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:38px;height:38px;border-radius:50%;background:var(--pink);color:#fff;display:grid;place-items:center;font-size:.95rem;box-shadow:0 4px 14px rgba(0,0,0,.3)}
+.cmp .lab{position:absolute;bottom:10px;font:700 .72rem "Nunito Sans";background:rgba(0,0,0,.75);color:#fff;padding:3px 10px;border-radius:99px}.cmp .l1{left:10px}.cmp .l2{right:10px}
+canvas.art{width:100%;height:auto;display:block;border-radius:14px;background:#ddd}
+.tile{cursor:pointer;border:0;border-radius:18px;overflow:hidden;background:var(--mist);transition:transform .15s,box-shadow .15s}.tile:hover{transform:translateY(-3px);box-shadow:var(--sh)}.tile.sel{box-shadow:0 0 0 3px var(--pink)}
+.tile .cap{padding:10px 14px;font-weight:700;font-size:.92rem;display:flex;justify-content:space-between;gap:6px}
+/* forms */
+label{display:block;font-weight:700;font-size:.88rem;margin:0 0 5px}
+input,select,textarea{width:100%;font:inherit;padding:11px 13px;border:1.5px solid var(--chalk);border-radius:12px;background:#fff;color:#000}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--pink);box-shadow:0 0 0 3px rgba(214,51,108,.15)}textarea{min-height:90px;resize:vertical}
+input[type=checkbox],input[type=radio]{width:auto;accent-color:var(--pink)}input[type=range]{padding:0}
+.fld{margin-bottom:14px}.err{color:var(--pink);font-size:.84rem;margin-top:4px;font-weight:600}.row{display:flex;gap:12px;flex-wrap:wrap}.row>*{flex:1;min-width:160px}
+/* stepper */
+.stepper{display:flex;gap:6px;margin:0 0 26px;flex-wrap:wrap}.stepper div{flex:1;min-width:110px;padding:10px 14px;border-radius:12px;background:var(--mist);font-size:.85rem;font-weight:700;color:var(--muted)}
+.stepper div.on{background:#000;color:#fff}.stepper div.done{background:var(--lilac);color:#000}
+/* tables */
+table.t{width:100%;border-collapse:collapse;font-size:.92rem;background:#fff;border:1px solid var(--chalk);border-radius:14px;overflow:hidden}
+table.t th{text-align:left;background:#000;color:#fff;font:700 .72rem "Nunito Sans";letter-spacing:.06em;text-transform:uppercase;padding:11px 12px}
+table.t td{padding:11px 12px;border-bottom:1px solid var(--chalk);vertical-align:middle}table.t tr:last-child td{border-bottom:0}
+.tw{overflow-x:auto}
+/* design card */
+.dc{background:var(--mist);border:0;border-radius:20px;overflow:hidden}.dc .bd{padding:16px}.dc .ac{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+.checklist{list-style:none;margin:0;padding:0}.checklist li{padding:5px 0;display:flex;gap:8px;align-items:flex-start;font-size:.92rem}
+.tick{color:var(--ok);font-weight:800}.cross{color:var(--pink);font-weight:800}
+/* vendors + paywall */
+.vcard{background:var(--mist);border:0;border-radius:20px;overflow:hidden;display:flex;flex-direction:column}
+.vcard .ph{height:92px;position:relative}.vcard .bd{padding:16px;flex:1;display:flex;flex-direction:column;gap:6px}.vcard .ft{display:flex;gap:6px;margin-top:auto;padding-top:8px;flex-wrap:wrap}
+.lockwrap{position:relative}.locked{filter:grayscale(1) blur(2.2px);opacity:.55;pointer-events:none;user-select:none}
+.lockcard{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(440px,92%);background:#fff;border:0;border-radius:22px;padding:26px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.28);z-index:5}
+.lockcard .ic{width:48px;height:48px;border-radius:50%;background:var(--lilac);display:grid;place-items:center;margin:0 auto 10px;font-size:1.2rem}
+.banner{background:var(--lilac);border-radius:18px;padding:16px 20px;display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-bottom:22px}.banner .grow{flex:1;min-width:220px}
+.keybox{font:800 1.3rem "Nunito Sans",monospace;letter-spacing:.1em;background:#000;color:var(--yellow);padding:16px 18px;border-radius:14px;text-align:center;margin:12px 0}
+.plan{position:relative;background:var(--mist)}.plan.pop{background:#fff;border:2px solid var(--pink);box-shadow:var(--sh)}.plan .pr{font:600 2.4rem "Bricolage Grotesque",sans-serif}.plan ul{padding-left:18px;margin:10px 0;color:var(--muted);font-size:.92rem}
+/* modal, toast */
+.mback{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:100;display:flex;align-items:flex-start;justify-content:center;padding:6vh 14px;overflow:auto}
+.mbox{position:relative;background:#fff;border-radius:24px;max-width:560px;width:100%;padding:28px;box-shadow:0 30px 80px rgba(0,0,0,.35)}.mbox.wide{max-width:900px}
+.mx{position:absolute;top:10px;right:14px;background:none;border:0;font-size:1.6rem;cursor:pointer;color:var(--muted)}
+#toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);z-index:200;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none}
+#toast div{background:#000;color:#fff;padding:10px 18px;border-radius:99px;font-size:.9rem;font-weight:600;box-shadow:0 6px 24px rgba(0,0,0,.25);animation:pop .25s}
+@keyframes pop{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+/* guide */
+#guide{position:fixed;right:16px;bottom:16px;z-index:70;font-size:.85rem}
+#guide .tg{background:var(--pink);color:#fff;border:0;border-radius:99px;padding:11px 18px;font:700 .88rem "Nunito Sans";cursor:pointer;box-shadow:0 8px 24px rgba(214,51,108,.4)}
+#guide .pn{position:absolute;right:0;bottom:52px;width:290px;background:#fff;border-radius:20px;padding:18px;box-shadow:0 20px 60px rgba(0,0,0,.28)}
+#guide ol{margin:8px 0 0;padding:0;list-style:none}#guide li{padding:5px 0;display:flex;gap:8px;cursor:pointer}#guide li i{width:20px;height:20px;border:1.5px solid #000;border-radius:50%;display:inline-grid;place-items:center;font-size:.7rem;font-style:normal;flex:none;font-weight:700}
+#guide li.done i{background:var(--ok);border-color:var(--ok);color:#fff}#guide li.done span{color:var(--muted);text-decoration:line-through}
+/* progress */
+.bar{height:10px;border-radius:99px;background:var(--chalk);overflow:hidden}.bar i{display:block;height:100%;background:var(--pink);width:0;transition:width .4s}
+.gsteps{list-style:none;margin:16px 0 0;padding:0}.gsteps li{padding:5px 0;color:var(--muted)}.gsteps li.on{color:#000;font-weight:700}.gsteps li.done{color:var(--ok)}
+/* footer */
+footer{background:#000;color:#fff;padding:52px 0 28px}footer a{color:#fff;opacity:.75;text-decoration:none;display:block;padding:3px 0}footer a:hover{opacity:1;color:var(--lilac)}
+footer .mono{color:var(--lilac)}
+.sidenav{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:22px}.sidenav a{padding:8px 16px;border-radius:99px;background:var(--mist);text-decoration:none;font-weight:700;font-size:.88rem}.sidenav a.on{background:#000;color:#fff}
+.stat{background:var(--mist);border-radius:18px;padding:18px}.stat b{display:block;font:600 2.2rem "Bricolage Grotesque",sans-serif}.stat span{color:var(--muted);font-size:.86rem}
+.chat{display:flex;flex-direction:column;gap:8px;max-height:220px;overflow:auto;padding:12px;background:var(--mist);border-radius:14px;margin:10px 0}.msg{max-width:80%;padding:8px 13px;border-radius:14px;font-size:.9rem;background:#fff}.msg.me{align-self:flex-end;background:var(--lilac)}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}.cal div{padding:10px 0;text-align:center;border-radius:10px;background:var(--mist);font-size:.85rem;cursor:pointer;font-weight:600}.cal div.off{background:#fbd9e4;text-decoration:line-through;color:var(--muted)}.cal div.h{background:none;border:0;font-weight:800;cursor:default}
+details{border-bottom:1px solid var(--chalk);padding:16px 0}summary{cursor:pointer;font-weight:700;list-style:none;display:flex;justify-content:space-between;gap:10px}summary::after{content:"+";font-size:1.3rem;line-height:1;color:var(--pink)}details[open] summary::after{content:"\2212"}details p{margin:10px 0 0;color:var(--muted)}
+.kpi{display:flex;align-items:flex-end;gap:6px;height:120px}.kpi i{flex:1;background:var(--pink);border-radius:8px 8px 0 0;min-height:6px}
+/* ---- layout modelled on the live site ---- */
+.circ{width:38px;height:38px;border-radius:50%;background:#e6e6e6;border:0;display:inline-grid;place-items:center;cursor:pointer;color:#000;text-decoration:none;position:relative;font:800 .9rem "Nunito Sans"}
+.circ:hover{background:var(--lilac)}.dot{position:absolute;top:-3px;right:-3px;background:var(--pink);color:#fff;border-radius:99px;font-size:.62rem;padding:1px 5px;font-style:normal}
+.collage{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:repeat(3,128px);gap:12px}.collage canvas{width:100%;height:100%;object-fit:cover;border-radius:18px;display:block}
+.collage .t1{grid-column:1;grid-row:1/3}.collage .t2{grid-column:2;grid-row:1}.collage .t3{grid-column:2;grid-row:2/4}.collage .t4{grid-column:1;grid-row:3}
+.cats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}@media(max-width:900px){.cats{grid-template-columns:repeat(2,1fr)}}@media(max-width:600px){.cats{grid-template-columns:1fr}}
+.cat{border-radius:22px;padding:20px;min-height:200px;display:flex;flex-direction:column;justify-content:flex-end;position:relative;color:#fff;overflow:hidden;text-decoration:none}
+.cat .k{font:800 .68rem "Nunito Sans";letter-spacing:.08em;text-transform:uppercase;opacity:.85}.cat h3{font-size:1.5rem;margin:4px 0}.cat p{margin:0;font-size:.86rem;opacity:.9}
+.cat .soon{position:absolute;top:14px;right:14px;background:rgba(255,255,255,.9);color:#000;font:800 .66rem "Nunito Sans";padding:3px 9px;border-radius:99px}
+.cat.c1{background:linear-gradient(135deg,#7a1f3d,#d6336c)}.cat.c2{background:linear-gradient(135deg,#222,#666)}.cat.c3{background:var(--lilac);color:#000;cursor:pointer}.cat.c4{background:linear-gradient(135deg,#111,#3a3a3a)}.cat.c5{background:var(--yellow);color:#000}.cat.c6{background:linear-gradient(135deg,#4e080c,#8a1c28)}
+.cat.c3 .th{display:flex;gap:6px;margin-bottom:10px}.cat.c3 canvas{width:33%;height:auto;border-radius:10px}
+.vlayout{display:grid;grid-template-columns:240px 1fr;gap:28px}@media(max-width:900px){.vlayout{grid-template-columns:1fr}}
+.filters .fh{display:flex;justify-content:space-between;margin-bottom:12px}.fg{margin-bottom:18px}.fg>b{display:block;margin-bottom:6px}
+.cbx{display:flex;align-items:center;gap:8px;font-weight:500;margin:0 0 6px;font-size:.9rem}.cbx i{margin-left:auto;color:var(--muted);font-style:normal;font-size:.8rem}
+.fchips{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0 16px}.fchip{border:1.5px solid var(--pink);color:var(--pink);border-radius:99px;padding:3px 11px;font-size:.8rem;font-weight:700;cursor:pointer;background:#fff}
+.vtop{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}.vtop select{width:auto}
+.vcard2{background:var(--mist);border-radius:20px;overflow:hidden;display:flex;flex-direction:column}.vph{height:150px;position:relative;display:grid;place-items:center}
+.vi{font:600 2.4rem "Bricolage Grotesque",sans-serif;color:#fff;text-shadow:0 2px 10px rgba(0,0,0,.35)}.vb{position:absolute;left:10px;top:10px;background:#fff;border-radius:99px;font:800 .68rem "Nunito Sans";padding:3px 10px}
+.heart{position:absolute;right:10px;top:10px;width:32px;height:32px;border-radius:50%;border:0;background:#fff;cursor:pointer;color:var(--pink);font-size:1rem}
+.vbd{padding:14px;display:flex;flex-direction:column;gap:4px;flex:1}.vft{display:flex;gap:6px;flex-wrap:wrap;margin-top:auto;padding-top:10px;align-items:center}
+.auth{display:grid;grid-template-columns:minmax(380px,1fr) 1.1fr;min-height:calc(100vh - 34px)}@media(max-width:900px){.auth{grid-template-columns:1fr}.aside{display:none}}
+.aform{padding:28px 44px;display:flex;flex-direction:column;justify-content:space-between;gap:24px;max-width:640px;width:100%;margin:0 auto}.ain{flex:1;padding-top:10px}
+.tab{display:block;font:800 .72rem "Nunito Sans";letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-decoration:none;margin-bottom:14px}
+.sso{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:14px;border:1.5px solid var(--chalk);border-radius:30px;background:#fff;font:700 .95rem "Nunito Sans";cursor:pointer;margin-bottom:12px}.sso:hover{border-color:#000}
+.sso .gi{color:#4285f4;font-weight:800;font-size:1.1rem}.sso .ai{background:#000;color:#fff;width:20px;height:20px;border-radius:50%;display:grid;place-items:center;font-size:.7rem}
+.or{text-align:center;font:700 .7rem "Nunito Sans";letter-spacing:.1em;color:var(--muted);margin:16px 0}
+.aside{position:relative;background:#111;overflow:hidden}.mosaic{position:absolute;inset:-10%;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;opacity:.5;transform:rotate(-5deg)}.mosaic canvas{width:100%;height:100%;object-fit:cover;border-radius:14px}
+.ov{position:relative;z-index:2;padding:56px;color:#fff;height:100%;display:flex;flex-direction:column;justify-content:space-between;background:linear-gradient(180deg,rgba(0,0,0,.35),rgba(0,0,0,.6))}
+.ov .big{font:500 clamp(2rem,3.6vw,3.2rem)/1.1 "Bricolage Grotesque",sans-serif;letter-spacing:-.02em}.ov .stats{display:flex;gap:30px}.ov .stats b{display:block;font:600 1.8rem "Bricolage Grotesque"}.ov .stats span{font-size:.8rem;opacity:.8}
+.menu a{display:block;padding:11px 4px;border-bottom:1px solid var(--chalk);text-decoration:none;font:600 1.15rem "Bricolage Grotesque",sans-serif}.menu a:hover{color:var(--pink)}
+.trio .card h3{font-size:1.3rem}
+</style></head><body>
+<div id="demobar"></div><header id="hdr"></header><main id="app"></main>
+<div id="modal"></div><div id="toast"></div><div id="guide"></div>
+<script>/* ===== Demo data: everything here is dummy content ===== */
+const M = {
+  D: ['Marigold garlands','Diyas (oil lamps)','Rangoli at the entrance','String lights','Warm gold and orange palette'],
+  E: ['Crescent and star motifs','Lanterns (fanoos)','Geometric patterns','Gold and green palette','Fairy lights'],
+  L: ['Red lanterns','Gold knots and ingots','Plum blossom','Red and gold palette','Couplet banners']
+};
+const CULTURES = {
+  diwali: { id:'diwali', name:'Diwali', tag:'Festival of lights', palette:['#F2A71B','#E4572E','#7A1F3D','#FFE8A3'], must:M.D,
+    avoid:['Christmas-style red and green','A white-only colour scheme','Idols placed on the floor'], card:'v0.3' },
+  eid: { id:'eid', name:'Eid', tag:'Celebration and gathering', palette:['#1F6F5C','#D9B35B','#0E3B35','#F4EFD8'], must:M.E,
+    avoid:['Images of people or animals','Alcohol-related set-ups','Christmas elements'], card:'v0.2' },
+  lny: { id:'lny', name:'Lunar New Year', tag:'Red, gold and good fortune', palette:['#C8102E','#F2C14E','#7A0C1E','#FFF1C9'], must:M.L,
+    avoid:['A white or black dominant palette','Clock motifs'], card:'v0.2' }
+};
+const VENUES = [
+  { id:'hall', name:'Banquet hall' },
+  { id:'garden', name:'Garden marquee' },
+  { id:'restaurant', name:'Restaurant room' }
+];
+const VARIANTS = [
+  { name:'Classic glow', key:'classic', d:1.0 },
+  { name:'Lavish', key:'lavish', d:1.6 },
+  { name:'Minimal', key:'minimal', d:0.55 },
+  { name:'Evening lights', key:'evening', d:1.15 }
+];
+const PREFS = ['Colour palette','Flowers','Lighting','Stage','Seating','Entrance decor'];
+const PLANS = [
+  { id:'starter', name:'Starter', price:9, credits:10, blurb:'Try it on one event', feats:['10 AI generation credits','Contact up to 3 vendors per event','Download designs'] },
+  { id:'plus', name:'Plus', price:24, credits:40, blurb:'For a full event plan', feats:['40 AI generation credits','Contact up to 5 vendors per event','Refine and regenerate designs','Vendor-inspired designs'], pop:true },
+  { id:'pro', name:'Pro', price:59, credits:120, blurb:'For planners and teams', feats:['120 AI generation credits','Unlimited vendor requests','All Plus features','Priority support'] }
+];
+const CATS = ['Decorators','Florists','Lighting','Catering','DJs and music','Photography','Draping and stages'];
+const VENDORS = [
+  { id:'v1', name:'Marigold & Co', cat:'Decorators', city:'London', rating:4.8, jobs:126, price:'£££', cultures:['diwali'], skills:[M.D[0],M.D[2],M.D[4]], base:1450, c:['#F2A71B','#E4572E'], blurb:'Full-venue Diwali decor with fresh marigold and handmade rangoli.' },
+  { id:'v2', name:'Lumen Events', cat:'Lighting', city:'Leicester', rating:4.7, jobs:88, price:'££', cultures:['diwali','eid'], skills:[M.D[1],M.D[3],M.E[4]], base:780, c:['#FFD27A','#C97B2E'], blurb:'Warm festival lighting, diya displays and fairy-light canopies.' },
+  { id:'v3', name:'Crescent Lights', cat:'Decorators', city:'Birmingham', rating:4.9, jobs:140, price:'£££', cultures:['eid'], skills:[M.E[0],M.E[1],M.E[2]], base:1650, c:['#1F6F5C','#D9B35B'], blurb:'Eid decor with fanoos lanterns, crescent arches and geometric panels.' },
+  { id:'v4', name:'Red Lantern Studio', cat:'Decorators', city:'London', rating:4.8, jobs:97, price:'£££', cultures:['lny'], skills:[M.L[0],M.L[1],M.L[4]], base:1500, c:['#C8102E','#F2C14E'], blurb:'Lunar New Year stages, lantern ceilings and calligraphy couplets.' },
+  { id:'v5', name:'Bloom Atelier', cat:'Florists', city:'Manchester', rating:4.6, jobs:64, price:'££', cultures:['diwali','lny'], skills:[M.D[0],M.L[2]], base:620, c:['#F6B6C8','#7A9E5C'], blurb:'Seasonal floral installations and garlands, made to order.' },
+  { id:'v6', name:'Saffron Table', cat:'Catering', city:'Leicester', rating:4.7, jobs:210, price:'£££', cultures:['diwali','eid'], skills:['Festival menus','Live counters'], base:2400, c:['#E4572E','#F2A71B'], blurb:'Festival feasts for 50 to 500 guests, with halal and vegetarian menus.' },
+  { id:'v7', name:'DJ Raahi', cat:'DJs and music', city:'London', rating:4.5, jobs:75, price:'££', cultures:['diwali','eid'], skills:['Bollywood sets','Live dhol'], base:700, c:['#7A1F3D','#F2A71B'], blurb:'Festival sets, live dhol players and a full PA.' },
+  { id:'v8', name:'Golden Hour Photos', cat:'Photography', city:'London', rating:4.9, jobs:180, price:'££', cultures:['diwali','eid','lny'], skills:['Event coverage','Same-week previews'], base:900, c:['#F4EFD8','#8C6A4C'], blurb:'Event photography with a quick-turnaround gallery.' },
+  { id:'v9', name:'Silk Road Drapes', cat:'Draping and stages', city:'Birmingham', rating:4.6, jobs:59, price:'££', cultures:['eid','diwali'], skills:[M.E[3],M.D[4]], base:980, c:['#D9B35B','#0E3B35'], blurb:'Ceiling drapes, stage backdrops and entrance arches.' },
+  { id:'v10', name:'Petal & Pine', cat:'Florists', city:'London', rating:4.4, jobs:41, price:'£', cultures:['lny'], skills:[M.L[2],M.L[3]], base:430, c:['#F6B6C8','#C8102E'], blurb:'Plum blossom branches and red-and-gold table flowers.' },
+  { id:'v11', name:'Festa Sound', cat:'DJs and music', city:'Manchester', rating:4.6, jobs:90, price:'££', cultures:['lny','eid'], skills:['Lion dance booking','Live MC'], base:650, c:['#C8102E','#F2C14E'], blurb:'Sound, MC and performance booking for festival nights.' },
+  { id:'v12', name:'Hearth & Spice', cat:'Catering', city:'London', rating:4.5, jobs:120, price:'££', cultures:['lny'], skills:['Banquet menus','Dim sum stations'], base:2100, c:['#7A0C1E','#F2C14E'], blurb:'Banquet menus and dim sum stations for large tables.' }
+];
+const FAQS = [
+  ['How does EventCulture AI work?','You upload a photo of your venue, choose the event and style, and the AI edits your photo into four decor concepts. Each concept is checked against a written culture card before you see it.'],
+  ['How do you keep the designs culturally accurate?','Every culture has a card of must-include items and must-avoid mistakes, written with experts. The AI follows it, a second step checks the result, and anything that fails is labelled "needs review". You can also report a mistake on any design.'],
+  ['Can I use my own venue photos?','Yes. Upload up to three photos of the real venue. The design keeps the structure and layout of your room.'],
+  ['What does a subscription give me?','AI generation credits, refine and regenerate, and the ability to contact vendors. When you subscribe you get a subscription key that unlocks everything.'],
+  ['How do vendors get paid?','You pay through the platform and the money is held until the service is complete. The vendor then requests a payout and the platform deducts its commission.'],
+  ['Can I negotiate with vendors?','Yes. You can request quotes from several vendors, compare them, and negotiate for up to three rounds each.'],
+  ['What if a design looks wrong?','Use "Report an inaccuracy" on the design. It goes to the admin team and the expert reviewer for that culture.']
+];
+const ADMIN_CUSTOMERS = [
+  ['Priya Shah','priya@example.com','London','Plus','Active'],['Omar Farouk','omar@example.com','Birmingham','Starter','Active'],
+  ['Mei Lin','mei@example.com','Manchester','Pro','Active'],['Daniel Reed','daniel@example.com','Leeds','None','Active'],
+  ['Sana Iqbal','sana@example.com','Leicester','Plus','Suspended']
+];
+const ADMIN_PENDING = [
+  { id:'p1', name:'Henna Hub', cat:'Decorators', city:'Leicester', status:'Pending' },
+  { id:'p2', name:'Pearl Events', cat:'Draping and stages', city:'London', status:'Pending' },
+  { id:'p3', name:'Jade Garden Florals', cat:'Florists', city:'Manchester', status:'Pending' }
+];
+const ADMIN_DISPUTES = [
+  { id:'d1', who:'Priya Shah vs Lumen Events', reason:'Lights arrived two hours late', status:'Open' },
+  { id:'d2', who:'Omar Farouk vs DJ Raahi', reason:'Set shorter than booked', status:'Open' }
+];
+const ADMIN_PAYOUTS = [
+  { id:'po1', vendor:'Crescent Lights', amount:1485, status:'Requested' },
+  { id:'po2', vendor:'Golden Hour Photos', amount:810, status:'Requested' }
+];
+const VENDOR_LEADS = [
+  { id:'l1', customer:'Priya Shah', event:'Diwali dinner, 120 guests', city:'London', budget:'£1,500', status:'New' },
+  { id:'l2', customer:'Rahul Mehta', event:'Office Diwali party, 80 guests', city:'London', budget:'£900', status:'New' },
+  { id:'l3', customer:'Anita Rao', event:'Temple fundraiser, 200 guests', city:'London', budget:'£2,000', status:'New' }
+];
+
+/* ===== Image drawing: dummy venue photos and decor outputs, all drawn in the browser ===== */
+function mulberry(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function hex2rgb(h){h=h.replace('#','');if(h.length===3)h=h.split('').map(c=>c+c).join('');const n=parseInt(h,16);return[n>>16&255,n>>8&255,n&255]}
+function rgba(h,a){const[r,g,b]=hex2rgb(h);return 'rgba('+r+','+g+','+b+','+a+')'}
+function glow(ctx,x,y,r,c,a){ctx.save();ctx.globalCompositeOperation='lighter';const g=ctx.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,rgba(c,a));g.addColorStop(1,rgba(c,0));ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();ctx.restore()}
+
+function roundTable(ctx,x,y,s,cloth){
+  ctx.fillStyle='rgba(0,0,0,.18)';ctx.beginPath();ctx.ellipse(x,y+s*.16,s*.62,s*.2,0,0,7);ctx.fill();
+  for(let i=0;i<8;i++){const a=i/8*Math.PI*2;const cx=x+Math.cos(a)*s*.78,cy=y+Math.sin(a)*s*.27;ctx.fillStyle='#6b5a4a';ctx.beginPath();ctx.ellipse(cx,cy,s*.1,s*.075,0,0,7);ctx.fill()}
+  ctx.fillStyle=cloth;ctx.beginPath();ctx.ellipse(x,y,s*.6,s*.2,0,0,7);ctx.fill();
+  ctx.fillStyle='rgba(255,255,255,.35)';ctx.beginPath();ctx.ellipse(x,y-s*.02,s*.3,s*.08,0,0,7);ctx.fill();
+}
+function drawVenue(ctx,w,h,type){
+  let g;
+  if(type==='garden'){
+    g=ctx.createLinearGradient(0,0,0,h*.5);g.addColorStop(0,'#bfe3f2');g.addColorStop(1,'#eaf6fb');ctx.fillStyle=g;ctx.fillRect(0,0,w,h*.55);
+    ctx.fillStyle='#8fbf86';ctx.beginPath();ctx.moveTo(0,h*.52);ctx.quadraticCurveTo(w*.25,h*.4,w*.5,h*.5);ctx.quadraticCurveTo(w*.8,h*.6,w,h*.46);ctx.lineTo(w,h*.6);ctx.lineTo(0,h*.6);ctx.fill();
+    g=ctx.createLinearGradient(0,h*.55,0,h);g.addColorStop(0,'#7fb069');g.addColorStop(1,'#5f9150');ctx.fillStyle=g;ctx.fillRect(0,h*.55,w,h*.45);
+    ctx.fillStyle='#f6f3ec';ctx.beginPath();ctx.moveTo(0,h*.3);ctx.lineTo(w*.5,h*.02);ctx.lineTo(w,h*.3);ctx.lineTo(w,h*.34);ctx.lineTo(0,h*.34);ctx.fill();
+    ctx.fillStyle='#e6e0d2';ctx.beginPath();ctx.moveTo(0,h*.34);ctx.lineTo(w*.5,h*.12);ctx.lineTo(w,h*.34);ctx.lineTo(w,h*.37);ctx.lineTo(w*.5,h*.16);ctx.lineTo(0,h*.37);ctx.fill();
+    ctx.fillStyle='#d8d0bd';[.08,.5,.92].forEach(p=>ctx.fillRect(w*p-5,h*.3,10,h*.3));
+    [[.2,.74],[.5,.82],[.8,.74],[.36,.92],[.66,.92]].forEach(p=>roundTable(ctx,w*p[0],h*p[1],w*.17,'#fbf8f1'));
+  } else if(type==='restaurant'){
+    g=ctx.createLinearGradient(0,0,0,h*.62);g.addColorStop(0,'#8a6048');g.addColorStop(1,'#6b4a3a');ctx.fillStyle=g;ctx.fillRect(0,0,w,h*.62);
+    ctx.fillStyle='#5b3f31';ctx.fillRect(0,0,w,h*.07);
+    for(let i=0;i<6;i++){ctx.fillStyle='rgba(0,0,0,.12)';ctx.fillRect(w*(.04+i*.16),h*.14,w*.12,h*.36)}
+    for(let i=0;i<4;i++){const x=w*(.15+i*.23);ctx.strokeStyle='#2c2118';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,h*.18);ctx.stroke();ctx.fillStyle='#d9b27a';ctx.beginPath();ctx.arc(x,h*.2,w*.025,0,Math.PI,false);ctx.fill();glow(ctx,x,h*.22,w*.05,'#FFD27A',.35)}
+    g=ctx.createLinearGradient(0,h*.62,0,h);g.addColorStop(0,'#3b2a20');g.addColorStop(1,'#271b14');ctx.fillStyle=g;ctx.fillRect(0,h*.62,w,h*.38);
+    ctx.fillStyle='#a9744f';ctx.fillRect(w*.1,h*.7,w*.8,h*.07);ctx.fillStyle='#8c5d3d';ctx.fillRect(w*.1,h*.77,w*.8,h*.03);
+    ctx.fillStyle='#4a3326';[.14,.32,.5,.68,.86].forEach(p=>{ctx.fillRect(w*p-16,h*.8,32,h*.12)});
+    ctx.fillStyle='#7a5238';[.14,.32,.5,.68,.86].forEach(p=>ctx.fillRect(w*p-22,h*.62,44,h*.08));
+  } else {
+    g=ctx.createLinearGradient(0,0,0,h*.58);g.addColorStop(0,'#e9e1d2');g.addColorStop(1,'#d6c9b3');ctx.fillStyle=g;ctx.fillRect(0,0,w,h*.58);
+    ctx.fillStyle='#cfc3ae';ctx.fillRect(0,0,w,h*.06);
+    for(let i=0;i<4;i++){const x=w*(.09+i*.23),y=h*.14,ww=w*.13,hh=h*.32;ctx.fillStyle='#b9cde0';ctx.beginPath();ctx.moveTo(x,y+hh);ctx.lineTo(x,y+ww*.5);ctx.arc(x+ww/2,y+ww*.5,ww/2,Math.PI,0);ctx.lineTo(x+ww,y+hh);ctx.closePath();ctx.fill();ctx.strokeStyle='#a89a82';ctx.lineWidth=4;ctx.stroke()}
+    ctx.fillStyle='#8a6f55';ctx.fillRect(w*.3,h*.5,w*.4,h*.08);ctx.fillStyle='#e8dfcf';ctx.fillRect(w*.33,h*.27,w*.34,h*.23);ctx.strokeStyle='#cfc3ae';ctx.lineWidth=3;ctx.strokeRect(w*.33,h*.27,w*.34,h*.23);
+    g=ctx.createLinearGradient(0,h*.58,0,h);g.addColorStop(0,'#b08968');g.addColorStop(1,'#8c6a4c');ctx.fillStyle=g;ctx.fillRect(0,h*.58,w,h*.42);
+    ctx.strokeStyle='rgba(0,0,0,.08)';ctx.lineWidth=2;for(let i=1;i<9;i++){ctx.beginPath();ctx.moveTo(w*.5,h*.58);ctx.lineTo(w*(i/9)*1.0,h);ctx.stroke()}
+    [[.2,.74],[.5,.8],[.8,.74],[.34,.92],[.66,.92]].forEach(p=>roundTable(ctx,w*p[0],h*p[1],w*.17,'#f3eee3'));
+  }
+}
+function drawCover(ctx,img,w,h){const r=Math.max(w/img.width,h/img.height);const iw=img.width*r,ih=img.height*r;ctx.drawImage(img,(w-iw)/2,(h-ih)/2,iw,ih)}
+
+/* ---- decor primitives ---- */
+function garland(ctx,x1,y1,x2,y2,sag,cols,r,R){
+  const len=Math.hypot(x2-x1,y2-y1)+sag;const n=Math.max(8,Math.floor(len/(r*1.5)));
+  ctx.strokeStyle='rgba(60,40,20,.5)';ctx.lineWidth=1.5;ctx.beginPath();
+  for(let i=0;i<=n;i++){const t=i/n;const x=x1+(x2-x1)*t,y=y1+(y2-y1)*t+Math.sin(Math.PI*t)*sag;i?ctx.lineTo(x,y):ctx.moveTo(x,y)}ctx.stroke();
+  for(let i=0;i<=n;i++){const t=i/n;const x=x1+(x2-x1)*t+(R()-.5)*3,y=y1+(y2-y1)*t+Math.sin(Math.PI*t)*sag+(R()-.5)*4;const rr=r*(.85+R()*.35);
+    ctx.fillStyle=cols[i%cols.length];ctx.beginPath();ctx.arc(x,y,rr,0,7);ctx.fill();
+    ctx.fillStyle='rgba(255,255,255,.28)';ctx.beginPath();ctx.arc(x-rr*.3,y-rr*.3,rr*.35,0,7);ctx.fill()}
+}
+function strand(ctx,x,y1,y2,cols,r,R){const n=Math.floor((y2-y1)/(r*1.5));for(let i=0;i<=n;i++){const y=y1+i*(y2-y1)/n;ctx.fillStyle=cols[i%cols.length];ctx.beginPath();ctx.arc(x+(R()-.5)*3,y,r*(.85+R()*.3),0,7);ctx.fill()}}
+function lights(ctx,x1,y1,x2,y2,sag,n,col,R,gl){
+  ctx.strokeStyle='rgba(30,20,10,.55)';ctx.lineWidth=1.2;ctx.beginPath();
+  for(let i=0;i<=40;i++){const t=i/40;const x=x1+(x2-x1)*t,y=y1+(y2-y1)*t+Math.sin(Math.PI*t)*sag;i?ctx.lineTo(x,y):ctx.moveTo(x,y)}ctx.stroke();
+  for(let i=0;i<=n;i++){const t=i/n;const x=x1+(x2-x1)*t,y=y1+(y2-y1)*t+Math.sin(Math.PI*t)*sag;
+    ctx.fillStyle='#fff6d6';ctx.beginPath();ctx.arc(x,y+3,2.6,0,7);ctx.fill();glow(ctx,x,y+3,gl,col,.55)}
+}
+function lantern(ctx,x,top,y,s,col,R){
+  ctx.strokeStyle='rgba(60,20,10,.6)';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(x,top);ctx.lineTo(x,y-s*.45);ctx.stroke();
+  glow(ctx,x,y,s*1.1,'#FF6A3D',.35);
+  const g=ctx.createRadialGradient(x-s*.2,y-s*.2,s*.1,x,y,s*.6);g.addColorStop(0,'#ff6b5a');g.addColorStop(1,col);
+  ctx.fillStyle='#E0B04A';ctx.fillRect(x-s*.17,y-s*.5,s*.34,s*.08);
+  ctx.fillStyle=g;ctx.beginPath();ctx.ellipse(x,y,s*.5,s*.42,0,0,7);ctx.fill();
+  ctx.strokeStyle='rgba(120,10,10,.45)';ctx.lineWidth=1.2;for(let i=-2;i<=2;i++){ctx.beginPath();ctx.ellipse(x,y,s*.5*Math.abs(i)/2.2+.1,s*.42,0,0,7);ctx.stroke()}
+  ctx.fillStyle='#E0B04A';ctx.fillRect(x-s*.17,y+s*.4,s*.34,s*.07);
+  ctx.strokeStyle='#E0B04A';ctx.lineWidth=1.4;for(let i=-2;i<=2;i++){ctx.beginPath();ctx.moveTo(x+i*s*.05,y+s*.47);ctx.lineTo(x+i*s*.07,y+s*.47+s*.28+R()*4);ctx.stroke()}
+}
+function fanoos(ctx,x,top,y,s,col,gl,R){
+  ctx.strokeStyle='rgba(20,30,25,.6)';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(x,top);ctx.lineTo(x,y-s*.62);ctx.stroke();
+  glow(ctx,x,y,s*1.2,'#FFD27A',.38);
+  ctx.fillStyle='#D9B35B';ctx.beginPath();ctx.arc(x,y-s*.62,s*.06,0,7);ctx.fill();
+  ctx.fillStyle=col;ctx.beginPath();ctx.moveTo(x-s*.34,y-s*.28);ctx.quadraticCurveTo(x,y-s*.95,x+s*.34,y-s*.28);ctx.fill();
+  ctx.fillStyle=gl;ctx.beginPath();ctx.moveTo(x-s*.34,y-s*.28);ctx.lineTo(x+s*.34,y-s*.28);ctx.lineTo(x+s*.25,y+s*.38);ctx.lineTo(x-s*.25,y+s*.38);ctx.closePath();ctx.fill();
+  ctx.fillStyle='rgba(255,230,160,.9)';for(let i=-1;i<=1;i++)for(let j=0;j<2;j++){ctx.beginPath();ctx.arc(x+i*s*.14,y-s*.08+j*s*.28,s*.05,0,7);ctx.fill()}
+  ctx.strokeStyle='#8a6a1f';ctx.lineWidth=2;ctx.strokeRect(x-s*.34+2,y-s*.28,s*.68-4,s*.1);
+  ctx.fillStyle='#D9B35B';ctx.fillRect(x-s*.28,y+s*.38,s*.56,s*.06);
+}
+function diya(ctx,x,y,s,R){
+  glow(ctx,x,y-s*.4,s*2.1,'#FF9A3D',.5);
+  ctx.fillStyle='#B5532A';ctx.beginPath();ctx.ellipse(x,y,s,s*.45,0,0,Math.PI);ctx.fill();
+  ctx.fillStyle='#8f3d1d';ctx.beginPath();ctx.ellipse(x,y,s,s*.2,0,0,7);ctx.fill();
+  ctx.fillStyle='#FFD27A';ctx.beginPath();ctx.moveTo(x,y-s*1.1);ctx.quadraticCurveTo(x+s*.4,y-s*.4,x,y-s*.1);ctx.quadraticCurveTo(x-s*.4,y-s*.4,x,y-s*1.1);ctx.fill();
+}
+function rangoli(ctx,cx,cy,r,P,R){
+  ctx.save();ctx.translate(cx,cy);ctx.scale(1,.34);
+  ctx.fillStyle='rgba(255,255,255,.14)';ctx.beginPath();ctx.arc(0,0,r*1.08,0,7);ctx.fill();
+  const rings=[[1,16,.11],[.78,14,.1],[.56,12,.09],[.36,10,.08]];
+  rings.forEach((rg,k)=>{const n=rg[1];for(let i=0;i<n;i++){const a=i/n*Math.PI*2;ctx.fillStyle=[P[0],P[1],P[2],'#fff'][(i+k)%4];ctx.beginPath();ctx.arc(Math.cos(a)*r*rg[0],Math.sin(a)*r*rg[0],r*rg[2],0,7);ctx.fill()}});
+  ctx.fillStyle=P[0];ctx.beginPath();for(let i=0;i<16;i++){const a=i/16*Math.PI*2,rr=i%2?r*.12:r*.24;ctx.lineTo(Math.cos(a)*rr,Math.sin(a)*rr)}ctx.fill();
+  ctx.restore();
+}
+function crescentStar(ctx,x,y,r,col){
+  glow(ctx,x,y,r*1.8,col,.35);ctx.fillStyle=col;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.arc(x+r*.38,y,r*.82,0,Math.PI*2,true);ctx.fill('evenodd');
+  const sx=x+r*.62,sy=y-r*.05,sr=r*.3;ctx.beginPath();for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,rr=i%2?sr*.45:sr;ctx.lineTo(sx+Math.cos(a)*rr,sy+Math.sin(a)*rr)}ctx.closePath();ctx.fill();
+}
+function geoStar(ctx,x,y,r,col,n){
+  ctx.save();ctx.strokeStyle=col;ctx.lineWidth=2;ctx.beginPath();for(let i=0;i<n*2;i++){const a=i/(n*2)*Math.PI*2,rr=i%2?r*.58:r;ctx.lineTo(x+Math.cos(a)*rr,y+Math.sin(a)*rr)}ctx.closePath();ctx.stroke();
+  ctx.beginPath();ctx.arc(x,y,r*.38,0,7);ctx.stroke();ctx.beginPath();ctx.arc(x,y,r*1.08,0,7);ctx.stroke();ctx.restore();
+}
+function blossom(ctx,x1,y1,x2,y2,R){
+  ctx.strokeStyle='#4a2c20';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(x1,y1);ctx.quadraticCurveTo((x1+x2)/2,y1-30,x2,y2);ctx.stroke();
+  for(let i=0;i<46;i++){const t=R();const x=x1+(x2-x1)*t+(R()-.5)*70,y=y1+(y2-y1)*t-Math.sin(Math.PI*t)*22+(R()-.5)*60;ctx.fillStyle=R()>.4?'#F6B6C8':'#fbd6e0';ctx.beginPath();ctx.arc(x,y,4+R()*4,0,7);ctx.fill();ctx.fillStyle='#E8A33D';ctx.beginPath();ctx.arc(x,y,1.5,0,7);ctx.fill()}
+}
+function couplet(ctx,x,y,w,h,ch){
+  ctx.fillStyle='#C8102E';ctx.fillRect(x,y,w,h);ctx.strokeStyle='#F2C14E';ctx.lineWidth=3;ctx.strokeRect(x+5,y+5,w-10,h-10);
+  ctx.fillStyle='#F2C14E';ctx.font='700 '+(w*.5)+'px serif';ctx.textAlign='center';ctx.textBaseline='middle';
+  for(let i=0;i<ch.length;i++)ctx.fillText(ch[i],x+w/2,y+h*(.2+i*.3));
+}
+function ingot(ctx,x,y,s){
+  glow(ctx,x,y,s*1.6,'#F2C14E',.3);ctx.fillStyle='#E0A82A';ctx.beginPath();ctx.moveTo(x-s,y-s*.2);ctx.quadraticCurveTo(x-s*.6,y+s*.55,x,y+s*.45);ctx.quadraticCurveTo(x+s*.6,y+s*.55,x+s,y-s*.2);ctx.quadraticCurveTo(x+s*.5,y-s*.45,x,y-s*.35);ctx.quadraticCurveTo(x-s*.5,y-s*.45,x-s,y-s*.2);ctx.fill();
+  ctx.fillStyle='#F7D56E';ctx.beginPath();ctx.ellipse(x,y-s*.15,s*.55,s*.2,0,0,7);ctx.fill();
+}
+function knot(ctx,x,y,s){ctx.strokeStyle='#E0B04A';ctx.lineWidth=3;ctx.fillStyle='#C8102E';ctx.beginPath();ctx.arc(x,y,s*.26,0,7);ctx.fill();ctx.stroke();ctx.beginPath();ctx.moveTo(x,y+s*.26);for(let i=-1;i<=1;i++){ctx.moveTo(x+i*s*.1,y+s*.26);ctx.lineTo(x+i*s*.12,y+s*.7)}ctx.stroke()}
+function drape(ctx,x,w,h,col,R){for(let i=0;i<8;i++){const g=ctx.createLinearGradient(0,0,0,h);g.addColorStop(0,rgba(col,.5));g.addColorStop(1,rgba(col,.12));ctx.fillStyle=g;ctx.fillRect(x+i*w/8,0,w/8+1,h*(.85+R()*.1))}}
+
+/* ---- decorate: apply a culture and a variant over a base image ---- */
+function decorate(ctx,w,h,cid,variant,seed){
+  const R=mulberry(seed),C=CULTURES[cid],P=C.palette,V=VARIANTS.find(v=>v.key===variant)||VARIANTS[0],d=V.d,ev=V.key==='evening';
+  // colour grade
+  ctx.save();ctx.globalCompositeOperation=ev?'multiply':'soft-light';ctx.fillStyle=rgba(ev?'#3a2550':P[0],ev?.55:.38);ctx.fillRect(0,0,w,h);ctx.restore();
+  if(V.key==='lavish'){const g=ctx.createRadialGradient(w/2,h/2,h*.3,w/2,h/2,h*.95);g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(1,'rgba(0,0,0,.28)');ctx.fillStyle=g;ctx.fillRect(0,0,w,h)}
+  const top=0;
+  if(cid==='diwali'){
+    const cols=['#F2A71B','#E4572E','#F7C948','#E8851C'];
+    const sw=[[.01,.34],[.34,.67],[.67,.99]];
+    sw.forEach((s,i)=>garland(ctx,w*s[0],h*.1,w*s[1],h*.1,h*(.07+(i===1?.02:0)),cols,w*.011,R));
+    if(d>1.2){sw.forEach(s=>garland(ctx,w*s[0],h*.17,w*s[1],h*.17,h*.06,cols,w*.009,R))}
+    const nStr=Math.round(5*d);for(let i=0;i<nStr;i++){const x=w*(.04+i*(.92/Math.max(1,nStr-1)));strand(ctx,x,h*.1,h*(.28+R()*.22),cols,w*.008,R)}
+    lights(ctx,w*.02,h*.21,w*.98,h*.21,h*.05,Math.round(34*d),'#FFC76B',R,w*.02);
+    const nd=Math.round(12*d);for(let i=0;i<nd;i++){const t=i/(nd-1);diya(ctx,w*(.12+t*.76),h*(.9+Math.sin(t*Math.PI)*.04),w*.011,R)}
+    if(d>.8){const n2=Math.round(7*d);for(let i=0;i<n2;i++){const t=i/(n2-1);diya(ctx,w*(.2+t*.6),h*.68,w*.008,R)}}
+    rangoli(ctx,w*.5,h*(d>1?.83:.85),w*(d>1?.13:.1),P,R);
+  } else if(cid==='eid'){
+    const dr=d>1?.2:.14;drape(ctx,0,w*dr,h*.6,'#F4EFD8',R);drape(ctx,w*(1-dr),w*dr,h*.6,'#F4EFD8',R);
+    crescentStar(ctx,w*.5,h*.2,h*(d>1?.1:.085),'#E8C468');
+    ctx.save();ctx.globalAlpha=.7;geoStar(ctx,w*.5,h*.38,h*.1,'#E8C468',8);geoStar(ctx,w*.12,h*.3,h*.05,'#E8C468',8);geoStar(ctx,w*.88,h*.3,h*.05,'#E8C468',8);ctx.restore();
+    const nl=Math.round(7*d);for(let i=0;i<nl;i++){const t=i/(nl-1);const x=w*(.08+t*.84);if(Math.abs(x-w*.5)<w*.07)continue;fanoos(ctx,x,0,h*(.18+R()*.2),h*(.1+R()*.03),P[0],'#F7D58A',R)}
+    garland(ctx,w*.02,h*.07,w*.98,h*.07,h*.05,['#1F6F5C','#2F8F73','#D9B35B'],w*.008,R);
+    lights(ctx,w*.0,h*.12,w*1,h*.12,h*.06,Math.round(36*d),'#FFE29A',R,w*.018);
+    ctx.fillStyle=rgba(P[1],.6);ctx.fillRect(w*.3,h*.575,w*.4,h*.012);
+    const nd=Math.round(6*d);for(let i=0;i<nd;i++){const t=i/(nd-1);fanoos(ctx,w*(.18+t*.64),h*.62,h*.9,h*.05,P[0],'#F7D58A',R)}
+  } else {
+    const nl=Math.round(9*d);for(let i=0;i<nl;i++){const t=i/(nl-1);lantern(ctx,w*(.05+t*.9),0,h*(.12+R()*.2),h*(.075+R()*.03),'#C8102E',R)}
+    if(d>1.2){for(let i=0;i<5;i++)lantern(ctx,w*(.12+i*.19),0,h*(.34+R()*.1),h*.06,'#E0201C',R)}
+    garland(ctx,w*.0,h*.05,w*1,h*.05,h*.035,['#F2C14E','#C8102E'],w*.007,R);
+    couplet(ctx,w*.02,h*.2,w*.06,h*.42,'福春');couplet(ctx,w*.92,h*.2,w*.06,h*.42,'喜年');
+    blossom(ctx,w*.0,h*.62,w*.26,h*.74,R);blossom(ctx,w*1,h*.62,w*.74,h*.74,R);
+    const nk=Math.round(4*d);for(let i=0;i<nk;i++)knot(ctx,w*(.2+i*(.6/Math.max(1,nk-1))),h*.28,h*.09);
+    const ni=Math.round(5*d);for(let i=0;i<ni;i++)ingot(ctx,w*(.3+i*(.4/Math.max(1,ni-1))),h*(.9+(i%2)*.03),h*.03);
+    lights(ctx,w*.0,h*.15,w*1,h*.15,h*.05,Math.round(30*d),'#FFB36B',R,w*.018);
+  }
+  if(ev){ctx.save();ctx.globalCompositeOperation='lighter';for(let i=0;i<14;i++)glow(ctx,w*R(),h*(.1+R()*.3),w*.09,P[0],.18);ctx.restore()}
+}
+
+/* ---- public renderers ---- */
+function paintBase(canvas,src){
+  canvas.width=960;canvas.height=640;const ctx=canvas.getContext('2d');
+  if(src&&src.kind==='img'&&src.img)drawCover(ctx,src.img,960,640);else drawVenue(ctx,960,640,src&&src.id||'hall');
+  return ctx;
+}
+function paintDesign(canvas,src,cid,variant,seed){const ctx=paintBase(canvas,src);decorate(ctx,960,640,cid,variant,seed)}
+
+/* ===== App core ===== */
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const clone=o=>JSON.parse(JSON.stringify(o));
+const money=n=>'£'+Number(n).toLocaleString('en-GB');
+const DEF={role:'visitor',user:null,plan:null,key:null,unlocked:false,credits:0,freeUsed:false,
+ draft:{step:1,name:'',type:'diwali',date:'',guests:100,budget:1500,venueName:'',venueCity:'London',photos:[],primary:0,prefs:[],prompt:'',keep:'',inspo:'',vendorInspo:''},
+ events:[],cur:null,designs:[],quotes:[],bookings:[],payouts:[],disputes:[],notes:[],flags:{},sel:[],vAct:'v1',
+ pend:{},leadSt:{},dispSt:{},payoutSt:{},avail:{},cmp:[],ids:{q:0,b:0,d:0,e:0,g:0},vf:{q:'',cat:'',city:''},gf:{c:'all'},sub:{stage:'plans',plan:'premium'}};
+let S;try{S=Object.assign(clone(DEF),JSON.parse(localStorage.getItem('ecdemo')||'{}'))}catch(e){S=clone(DEF)}
+const MEM={imgs:{}};
+function save(){try{localStorage.setItem('ecdemo',JSON.stringify(S))}catch(e){}}
+function toast(m){const t=document.createElement('div');t.textContent=m;$('#toast').appendChild(t);setTimeout(()=>t.remove(),3400)}
+function openModal(html,wide){$('#modal').innerHTML='<div class="mback" data-act="mback"><div class="mbox'+(wide?' wide':'')+'"><button class="mx" data-act="closeModal" aria-label="Close">&times;</button>'+html+'</div></div>';paintAll($('#modal'))}
+function closeModal(){$('#modal').innerHTML=''}
+function notify(text){S.notes.unshift({t:Date.now(),text,read:false});save();header()}
+function flag(k){if(!S.flags[k]){S.flags[k]=1;save();guide()}}
+function go(p){if(location.hash==='#'+p)render();else location.hash='#'+p}
+const iso=d=>d.toISOString().slice(0,10);
+function inDays(n){const d=new Date();d.setDate(d.getDate()+n);return iso(d)}
+const niceDate=s=>s?new Date(s+'T12:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}):'';
+const vend=id=>VENDORS.find(v=>v.id===id);
+const cult=id=>CULTURES[id];
+function initials(n){return n.split(/[ &]+/).filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase()}
+
+/* ----- demo bar, header, guide ----- */
+function demobar(){
+  $('#demobar').innerHTML='<div class="in"><span class="tagd">DEMO</span><span>Dummy data only. Nothing here is real, and nothing leaves your browser.</span><div class="roles">'+
+  ['visitor','customer','vendor','admin'].map(r=>'<button class="'+(S.role===r?'on':'')+'" data-act="role" data-r="'+r+'">'+r[0].toUpperCase()+r.slice(1)+'</button>').join('')+
+  '<button data-act="reset">Reset demo</button></div></div>';
+}
+function header(){
+  const path=location.hash.slice(1)||'/',r=S.role;
+  const on=p=>(p==='/'?path==='/':path===p||path.startsWith(p+'/'))?'on':'';
+  let nav=[],right='';
+  if(r==='visitor'){nav=[['/','Home'],['/how','How it works'],['/explore','Explore designs'],['/vendors','Find vendors'],['/pricing','Pricing'],['/for-vendors','For vendors'],['/about','About'],['/faq','FAQ']];
+    right='<a class="btn sm" href="#/login">Log in</a><a class="btn sm p" href="#/signup">Get started</a>'}
+  else if(r==='customer'){nav=[['/dashboard','Dashboard'],['/create','Create design'],['/events','My events'],['/vendors','Vendors'],['/quotes','Quotes'],['/bookings','Bookings']];
+    const un=S.notes.filter(n=>!n.read).length;
+    right='<a class="btn sm" href="#/notifications" title="Notifications">Alerts'+(un?' <span class="badge draft">'+un+'</span>':'')+'</a><a class="btn sm" href="#/profile">'+esc(S.user?S.user.name.split(' ')[0]:'Profile')+'</a>'}
+  else if(r==='vendor'){nav=[['/v','Dashboard'],['/v/leads','Leads and quotes'],['/v/bookings','Bookings'],['/v/availability','Availability'],['/v/earnings','Earnings']];right='<span class="badge">Acting as '+esc(vend(S.vAct).name)+'</span>'}
+  else{nav=[['/a','Admin panel']];right='<span class="badge">Super admin</span>'}
+  $('#hdr').innerHTML='<div class="in"><a class="logo" href="#/'+(r==='visitor'?'':r==='customer'?'dashboard':r==='vendor'?'v':'a')+'">EventCulture AI</a><nav class="nav">'+nav.map(n=>'<a class="'+on(n[0])+'" href="#'+n[0]+'">'+n[1]+'</a>').join('')+'</nav><div class="hr">'+right+'</div></div>';
+}
+const GUIDE=[['upload','Pick or upload a venue photo','/create'],['gen','Generate four designs','/create'],['paywall','See the vendor paywall','/results'],['key','Subscribe and get your key','/results'],['quote','Request a vendor quote','/results'],['book','Negotiate, book and pay','/quotes'],['payout','Complete the job, then approve the payout as Admin','/bookings']];
+let guideOpen=false;
+function guide(){
+  const done=GUIDE.filter(g=>S.flags[g[0]]).length;
+  $('#guide').innerHTML=(guideOpen?'<div class="pn"><b>Demo walkthrough</b><div class="small muted">Follow these steps to see the whole product.</div><ol>'+GUIDE.map((g,i)=>'<li class="'+(S.flags[g[0]]?'done':'')+'" data-act="gstep" data-p="'+g[2]+'" data-k="'+g[0]+'"><i>'+(S.flags[g[0]]?'&#10003;':i+1)+'</i><span>'+g[1]+'</span></li>').join('')+'</ol></div>':'')+
+  '<button class="tg" data-act="gtoggle">Walkthrough '+done+'/'+GUIDE.length+'</button>';
+}
+
+/* ----- router ----- */
+const VIEWS={};
+function render(){
+  const p=location.hash.slice(1)||'/',parts=p.split('/').filter(Boolean),key='/'+(parts[0]||'');
+  let html;
+  try{html=(VIEWS[key]||notFound)(parts)}catch(err){console.error(err);html='<div class="wrap sec"><h2>Something broke in the demo</h2><pre class="small">'+esc(err.stack||err)+'</pre></div>'}
+  $('#app').innerHTML=html;demobar();header();guide();paintAll($('#app'));
+}
+window.addEventListener('hashchange',()=>{closeModal();render();window.scrollTo(0,0)});
+
+/* ----- canvas painting ----- */
+function srcOf(ref){
+  if(!ref)return{kind:'sample',id:'hall'};
+  if(ref.kind==='sample')return ref;
+  const img=MEM.imgs[ref.key];return img?{kind:'img',img}:{kind:'sample',id:'hall'};
+}
+function paintAll(root){
+  $$('canvas[data-paint]',root).forEach(cv=>{
+    const a=cv.dataset.paint.split(':');
+    try{
+      if(a[0]==='sample')paintBase(cv,{kind:'sample',id:a[1]});
+      else if(a[0]==='gal')paintDesign(cv,{kind:'sample',id:a[2]},a[1],a[3],+a[4]||7);
+      else if(a[0]==='design'){const d=S.designs.find(x=>x.id===a[1]);if(d)paintDesign(cv,srcOf(d.src),d.culture,d.variant,d.seed)}
+      else if(a[0]==='orig'){const d=S.designs.find(x=>x.id===a[1]);if(d)paintBase(cv,srcOf(d.src))}
+      else if(a[0]==='photo'){const p=S.draft.photos[+a[1]];paintBase(cv,srcOf(p))}
+    }catch(e){console.error(e)}
+  });
+}
+
+/* ----- shared page pieces ----- */
+function footer(){
+  return '<footer><div class="wrap"><div class="grid g4"><div><div class="logo" style="color:#fff">EventCulture AI</div><p class="small" style="opacity:.7;margin-top:10px">Culturally accurate decor concepts for your actual venue, with vendors who can deliver them.</p></div>'+
+  '<div><div class="mono" style="color:var(--lilac)">Platform</div><a href="#/how">How it works</a><a href="#/explore">Explore designs</a><a href="#/vendors">Find vendors</a><a href="#/pricing">Pricing</a></div>'+
+  '<div><div class="mono" style="color:var(--lilac)">Company</div><a href="#/about">About us</a><a href="#/for-vendors">For vendors</a><a href="#/faq">FAQ</a><a href="#/contact">Contact us</a></div>'+
+  '<div><div class="mono" style="color:var(--lilac)">Legal</div><a href="#/terms">Terms and conditions</a><a href="#/privacy">Privacy policy</a></div></div>'+
+  '<p class="small" style="opacity:.6;margin:28px 0 0">&copy; 2026 EventCulture AI. Interactive demo with dummy data.</p></div></footer>';
+}
+function pageHead(t,s,eyebrow){return '<section class="sec alt" style="padding:48px 0"><div class="wrap">'+(eyebrow?'<div class="mono">'+eyebrow+'</div>':'')+'<h1 style="font-size:clamp(2rem,4.6vw,3.2rem)">'+t+'</h1>'+(s?'<p class="muted" style="max-width:680px;margin:0">'+s+'</p>':'')+'</div></section>'}
+function cmpSlider(base,deco){
+  return '<div class="cmp"><canvas data-paint="'+base+'"></canvas><canvas class="top" data-paint="'+deco+'"></canvas><div class="hd"></div><span class="lab l1">After</span><span class="lab l2">Your venue</span><input type="range" min="0" max="100" value="50" data-act="slide" aria-label="Compare before and after"></div>';
+}
+function startCta(label){return S.role==='customer'?'<a class="btn p lg" href="#/create">'+(label||'Start designing')+'</a>':'<a class="btn p lg" href="#/signup">'+(label||'Start designing')+'</a>'}
+function faqList(n){return FAQS.slice(0,n||FAQS.length).map(f=>'<details><summary>'+esc(f[0])+'</summary><p>'+esc(f[1])+'</p></details>').join('')}
+
+/* ----- vendor card / matching ----- */
+function reasonFor(v,cid){
+  const m=v.skills.filter(s=>cult(cid).must.includes(s));
+  if(m.length)return 'Matches: '+m.slice(0,2).join(', ');
+  return v.cultures.includes(cid)?v.cat+' who work with '+cult(cid).name+' events':v.cat+' in your area';
+}
+function matchVendors(cid){
+  const sc=v=>(v.cultures.includes(cid)?10:0)+v.skills.filter(s=>cult(cid).must.includes(s)).length*3+v.rating;
+  const all=VENDORS.slice().sort((a,b)=>sc(b)-sc(a));const out=[],cats={};
+  all.forEach(v=>{if(out.length<6&&!cats[v.cat]){out.push(v);cats[v.cat]=1}});
+  all.forEach(v=>{if(out.length<6&&!out.includes(v))out.push(v)});
+  return out;
+}
+function vcard(v,o){
+  o=o||{};const open=S.unlocked&&S.role==='customer';
+  const cid=o.cid;const ev=cid?'<div class="small" style="color:var(--maroon);font-weight:600">'+esc(reasonFor(v,cid))+'</div>':'';
+  return '<div class="vcard"><div class="ph" style="background:linear-gradient(135deg,'+v.c[0]+','+v.c[1]+')"><span style="position:absolute;left:14px;bottom:10px;font:400 1.6rem Bricolage Grotesque,sans-serif;color:#fff;text-shadow:0 1px 6px rgba(0,0,0,.35)">'+esc(initials(v.name))+'</span><span class="badge" style="position:absolute;right:10px;top:10px">Sample vendor</span></div>'+
+  '<div class="bd"><div style="display:flex;justify-content:space-between;gap:8px"><b>'+esc(v.name)+'</b><span class="small">&#9733; '+v.rating+'</span></div><div class="small muted">'+esc(v.cat)+' &middot; '+esc(v.city)+' &middot; '+v.price+'</div>'+ev+'<div class="small muted">'+esc(v.blurb)+'</div>'+
+  '<div class="ft"><button class="btn sm" data-act="vprofile" data-id="'+v.id+'">View profile</button>'+
+  (o.select&&open?'<label style="display:inline-flex;gap:6px;align-items:center;margin:0;font-weight:500"><input type="checkbox" data-act="vsel" data-id="'+v.id+'" '+(S.sel.includes(v.id)?'checked':'')+'> Select</label>':'')+
+  (open?'<button class="btn sm p" data-act="rq" data-id="'+v.id+'">Request quote</button>':'<button class="btn sm b" data-act="paywall">&#128274; Subscribe to contact</button>')+'</div></div></div>';
+}
+
+/* ===== PUBLIC VIEWS ===== */
+VIEWS['/']=function(){
+  return '<section class="hero"><div class="wrap grid"><div><div class="mono">AI venue visualisation + vendor booking</div><h1>See your venue decorated, and <span class="acc">culturally right.</span></h1>'+
+  '<p class="muted" style="font-size:1.15rem;max-width:520px">Upload a photo of your actual venue. Get four decor concepts for Diwali, Eid or Lunar New Year, checked against rules written with cultural experts. Then request quotes from vendors who can build it.</p>'+
+  '<div style="display:flex;gap:10px;flex-wrap:wrap">'+startCta('Start designing')+'<a class="btn lg" href="#/how">How it works</a></div>'+
+  '<p class="small muted" style="margin-top:18px">Drag the slider &rarr; the same banquet hall, before and after.</p></div>'+
+  '<div>'+cmpSlider('sample:hall','gal:diwali:hall:classic:11')+'</div></div></section>'+
+  '<section class="sec"><div class="wrap"><div class="center"><div class="mono">How it works</div><h2>From a photo to a booked vendor</h2></div><div class="grid g4" style="margin-top:28px">'+
+  [['1','Upload your venue','Add photos of the real room. We keep its structure and layout.'],['2','Describe your event','Choose the culture, style, guests and budget.'],['3','Pick a design','Four concepts, each checked against the culture card.'],['4','Book vendors','Request quotes, negotiate, book and pay in one place.']].map(s=>'<div class="card"><div class="mono">Step '+s[0]+'</div><h3>'+s[1]+'</h3><p class="muted small" style="margin:0">'+s[2]+'</p></div>').join('')+'</div></div></section>'+
+  '<section class="sec alt"><div class="wrap grid g2" style="align-items:center;gap:40px"><div><div class="mono">Cultural accuracy</div><h2>Rules written down, checked every time</h2><p class="muted">Every culture has a card of must-include items and must-avoid mistakes. The AI follows it, a second step checks the result, and anything that fails is labelled &ldquo;needs review&rdquo;.</p><a class="btn" href="#/explore">See example designs</a></div>'+
+  '<div class="card"><div style="display:flex;justify-content:space-between;align-items:center"><b>Diwali culture card</b><span class="badge draft">Draft rules v0.3, pending expert sign-off</span></div><ul class="checklist" style="margin-top:12px">'+CULTURES.diwali.must.map(m=>'<li><span class="tick">&#10003;</span>'+esc(m)+'</li>').join('')+'</ul><div class="small muted" style="margin-top:8px">Must avoid: '+CULTURES.diwali.avoid.map(esc).join(' &middot; ')+'</div></div></div></section>'+
+  '<section class="sec"><div class="wrap"><div class="center"><div class="mono">Event types</div><h2>Built for cultural celebrations</h2></div><div class="grid g4" style="margin-top:26px">'+
+  Object.values(CULTURES).map(c=>'<div class="tile" data-act="tryculture" data-c="'+c.id+'"><canvas class="art" data-paint="gal:'+c.id+':'+(c.id==='eid'?'garden':c.id==='lny'?'restaurant':'hall')+':classic:'+(c.id==='eid'?21:c.id==='lny'?31:11)+'" style="border-radius:0"></canvas><div class="cap"><span>'+c.name+'</span><span class="muted small">Try it</span></div></div>').join('')+
+  '<div class="tile" style="opacity:.6;cursor:default"><div style="aspect-ratio:3/2;display:grid;place-items:center;background:var(--mist)" class="muted">Weddings</div><div class="cap"><span>More event types</span><span class="badge">Coming soon</span></div></div></div></div></section>'+
+  '<section class="sec dark"><div class="wrap grid g2" style="gap:40px;align-items:center"><div><div class="mono" style="color:var(--lilac)">Vendor booking</div><h2>Quote, negotiate, book, pay</h2><p style="opacity:.8">Send your chosen design to several vendors. Compare quotes, negotiate for up to three rounds, and pay through the platform. Your money is held until the job is done.</p><a class="btn b" href="#/vendors">Browse vendors</a></div>'+
+  '<div class="grid g2">'+['Vendor categories','Decorators, florists, lighting, catering, DJs, photography','Verified vendors','Every vendor is approved by our team before going live','Multiple vendors','Book different services for the same event','Held payments','Released to the vendor when the service is complete'].reduce((a,x,i,arr)=>i%2?a:a.concat('<div style="border:1px solid rgba(246,245,239,.25);border-radius:14px;padding:16px"><b>'+x+'</b><div class="small" style="opacity:.75;margin-top:4px">'+arr[i+1]+'</div></div>'),[]).join('')+'</div></div></section>'+
+  '<section class="sec"><div class="wrap"><div class="center"><div class="mono">Plans</div><h2>Subscribe to contact vendors</h2><p class="muted">Your first preview is free. A subscription gives you a key that unlocks vendors and credits.</p></div><div class="grid g3" style="margin-top:26px">'+PLANS.map(planCard).join('')+'</div></div></section>'+
+  '<section class="sec alt"><div class="wrap" style="max-width:780px"><div class="center"><h2>Questions</h2></div>'+faqList(5)+'<div class="center" style="margin-top:20px"><a class="btn" href="#/faq">All FAQs</a></div></div></section>'+
+  '<section class="sec center"><div class="wrap"><h2>See your venue in its best light</h2><p class="muted">Free first preview. No card needed.</p>'+startCta('Create your first design')+'</div></section>'+footer();
+};
+function planCard(p){
+  return '<div class="card plan '+(p.pop?'pop':'')+'">'+(p.pop?'<span class="badge draft" style="position:absolute;top:-12px;right:16px">Most popular</span>':'')+'<h3>'+p.name+'</h3><div class="muted small">'+p.blurb+'</div><div class="pr">'+money(p.price)+'<span class="small muted"> / month</span></div><ul>'+p.feats.map(f=>'<li>'+f+'</li>').join('')+'</ul><button class="btn '+(p.pop?'p':'')+'" style="width:100%;justify-content:center" data-act="choosePlan" data-id="'+p.id+'">Choose '+p.name+'</button></div>';
+}
+VIEWS['/how']=function(){
+  const cj=[['Create an account','Sign up with email or a social account and verify it.'],['Upload your venue photos','Add photos of the real room.'],['Describe your event and decor','Pick the culture, style, preferences and any custom prompt.'],['Review the four designs','Each one is checked against the culture card.'],['Choose a design and share it','Send it to several vendors to get quotations.'],['Negotiate, book and pay','Compare quotes, book the vendors you want and pay through the platform.']];
+  const vj=[['Register','Create a business profile and upload your portfolio.'],['Get verified','Our team reviews and approves your application.'],['Receive leads','Customers send you designs with their event requirements.'],['Send quotations','Quote, negotiate for up to three rounds, and win the booking.'],['Deliver the service','Upload completion evidence when the job is done.'],['Request your payout','Receive your earnings, minus the platform commission.']];
+  const col=(t,a)=>'<div><h2>'+t+'</h2>'+a.map((s,i)=>'<div class="card" style="margin-bottom:12px"><div class="step"><b>0'+(i+1)+'</b><div><h3 style="margin:0">'+s[0]+'</h3><div class="muted small">'+s[1]+'</div></div></div></div>').join('')+'</div>';
+  return pageHead('How EventCulture AI works','Two journeys: the customer planning an event, and the vendor delivering it.','How it works')+'<section class="sec"><div class="wrap grid g2" style="gap:40px">'+col('Customer journey',cj)+col('Vendor journey',vj)+'</div><div class="wrap center" style="margin-top:36px">'+startCta('Start creating a design')+' <a class="btn lg" href="#/vendor-signup">Join as a vendor</a></div></section>'+footer();
+};
+VIEWS['/explore']=function(){
+  const f=S.gf.c;const combos=[];
+  Object.keys(CULTURES).forEach((c,i)=>VENUES.forEach((v,j)=>VARIANTS.slice(0,2).forEach((vr,k)=>combos.push({c,v:v.id,vr:vr.key,seed:11+i*10+j*3+k}))));
+  const list=combos.filter(x=>f==='all'||x.c===f).slice(0,9);
+  return pageHead('Explore designs','Examples of AI-generated concepts on sample venues. Open one to compare it with the original.','Design gallery')+'<section class="sec"><div class="wrap"><div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px"><span class="chip '+(f==='all'?'on':'')+'" data-act="gfilter" data-c="all">All</span>'+Object.values(CULTURES).map(c=>'<span class="chip '+(f===c.id?'on':'')+'" data-act="gfilter" data-c="'+c.id+'">'+c.name+'</span>').join('')+'</div>'+
+  '<div class="grid g3">'+list.map(x=>'<div class="tile" data-act="gopen" data-c="'+x.c+'" data-v="'+x.v+'" data-vr="'+x.vr+'" data-seed="'+x.seed+'"><canvas class="art" data-paint="gal:'+x.c+':'+x.v+':'+x.vr+':'+x.seed+'" style="border-radius:0"></canvas><div class="cap"><span>'+cult(x.c).name+' &middot; '+VENUES.find(v=>v.id===x.v).name+'</span><span class="muted small">'+VARIANTS.find(v=>v.key===x.vr).name+'</span></div></div>').join('')+'</div>'+
+  '<p class="center muted small" style="margin-top:26px">Results vary with the venue photo and your preferences.</p><div class="center" style="margin-top:10px">'+startCta('Create my own design')+'</div></div></section>'+footer();
+};
+VIEWS['/vendors']=function(){
+  const cities=[...new Set(VENDORS.map(v=>v.city))];
+  return pageHead('Find vendors','Approved vendors for decor, flowers, lighting, catering, music and photography. These are sample vendors for the demo.','Vendor directory')+'<section class="sec"><div class="wrap">'+
+  (S.role==='customer'&&!S.unlocked?'<div class="banner"><div class="grow"><b>Subscribe to contact vendors.</b><div class="small">You can browse profiles now. Contacting vendors needs a subscription key.</div></div><button class="btn p sm" data-act="paywall">See plans</button></div>':'')+
+  '<div class="row" style="margin-bottom:20px"><div><label>Search</label><input data-vf="q" placeholder="Business name or keyword" value="'+esc(S.vf.q)+'"></div><div><label>Service</label><select data-vf="cat"><option value="">All services</option>'+CATS.map(c=>'<option '+(S.vf.cat===c?'selected':'')+'>'+c+'</option>').join('')+'</select></div><div><label>City</label><select data-vf="city"><option value="">All cities</option>'+cities.map(c=>'<option '+(S.vf.city===c?'selected':'')+'>'+c+'</option>').join('')+'</select></div></div><div id="vlist">'+vlist()+'</div></div></section>'+footer();
+};
+function vlist(){
+  const q=S.vf.q.toLowerCase();const l=VENDORS.filter(v=>(!S.vf.cat||v.cat===S.vf.cat)&&(!S.vf.city||v.city===S.vf.city)&&(!q||(v.name+' '+v.blurb+' '+v.skills.join(' ')).toLowerCase().includes(q)));
+  return l.length?'<div class="grid g3">'+l.map(v=>vcard(v)).join('')+'</div>':'<div class="card center muted">No vendors match these filters. Try clearing one.</div>';
+}
+VIEWS['/pricing']=function(){
+  return pageHead('Pricing','Your first design preview is free. Subscribe for credits, vendor contact and refinements. Demo prices only.','Plans')+'<section class="sec"><div class="wrap"><div class="grid g3">'+PLANS.map(planCard).join('')+'</div>'+
+  '<div class="grid g2" style="margin-top:34px"><div class="card"><h3>Billing and renewal</h3><p class="muted small" style="margin:0">Plans renew monthly. Your credits reset on renewal. Cancel any time before the next billing date. Applicable taxes are shown at checkout.</p></div><div class="card"><h3>What uses a credit?</h3><p class="muted small" style="margin:0">One generation of four designs, or one refinement of a single design. Vendor requests and downloads do not use credits.</p></div></div>'+
+  '<div style="max-width:760px;margin:40px auto 0">'+faqList(4)+'</div></div></section>'+footer();
+};
+VIEWS['/for-vendors']=function(){
+  return pageHead('Grow your business with EventCulture AI','Receive leads that arrive with the customer\'s chosen design, venue photos and requirements.','For vendors')+'<section class="sec"><div class="wrap"><div class="grid g3">'+
+  [['Qualified leads','Customers share their AI design and event details with you.'],['Quote and negotiate','Send quotations and negotiate for up to three rounds.'],['Confirmed bookings','Bookings are confirmed through the platform, with payment held.'],['Commission-based','The platform deducts a single commission from successful bookings.'],['Verified profile','Applications are reviewed and approved by our admin team.'],['Clear payouts','Upload completion evidence and request your payout.']].map(c=>'<div class="card"><h3>'+c[0]+'</h3><p class="muted small" style="margin:0">'+c[1]+'</p></div>').join('')+'</div><div class="center" style="margin-top:32px"><a class="btn p lg" href="#/vendor-signup">Join as a vendor</a> <button class="btn lg" data-act="role" data-r="vendor">See the vendor dashboard</button></div></div></section>'+footer();
+};
+VIEWS['/about']=function(){
+  return pageHead('About EventCulture AI','We turn a photo of your venue into culturally accurate decor concepts, and connect you with vendors who can build them.','About us')+'<section class="sec"><div class="wrap grid g2" style="gap:40px"><div><h2>Our mission</h2><p class="muted">Cultural events deserve decor that gets the details right. Generic AI images often miss them. We start from your real venue and a written culture card, so concepts are specific, checkable and buildable.</p><h2 style="margin-top:28px">Venue-specific, not generic</h2><p class="muted">Every design is anchored to the structure and layout of your room.</p></div><div class="card"><h3>The team</h3><p class="muted small">Team and company information will be provided by the client.</p><div class="grid g2">'+['Founder','Cultural lead','Engineering','Vendor partnerships'].map(t=>'<div class="card flat" style="background:var(--mist)"><b>'+t+'</b><div class="small muted">Placeholder</div></div>').join('')+'</div></div></div></section>'+footer();
+};
+VIEWS['/faq']=function(){return pageHead('Frequently asked questions','Answers about designs, subscriptions, vendors, quotations, payments and bookings.','FAQ')+'<section class="sec"><div class="wrap" style="max-width:800px">'+faqList()+'</div></section>'+footer()};
+VIEWS['/contact']=function(){
+  return pageHead('Contact us','Send us a message and the team will get back to you.','Contact')+'<section class="sec"><div class="wrap grid g2" style="gap:40px"><form data-form="contact" novalidate><div class="fld"><label>Name *</label><input name="name"></div><div class="fld"><label>Email *</label><input name="email" type="email"></div><div class="fld"><label>Enquiry type</label><select name="type"><option>General</option><option>Customer support</option><option>Vendor enquiry</option><option>Partnerships</option></select></div><div class="fld"><label>Message *</label><textarea name="msg"></textarea></div><div class="err" id="ferr"></div><button class="btn p">Send message</button></form>'+
+  '<div class="card"><h3>Get in touch</h3><p class="muted small">hello@eventculture.example<br>+44 20 0000 0000<br>Mon to Fri, 9:00 to 17:30 UK time</p><a class="link" href="#/faq">Read the FAQs first</a></div></div></section>'+footer();
+};
+const LEGAL=(t,d)=>pageHead(t,'Last updated: '+d+' (demo placeholder)','Legal')+'<section class="sec"><div class="wrap" style="max-width:780px"><p class="muted">This is placeholder text for the demo. The final wording will be supplied by the client and their legal adviser. It will cover customer, vendor, subscription, booking, payment and platform-use terms, and how personal data and uploaded venue photos are handled.</p>'+['Using the platform','Accounts and verification','Subscriptions and credits','Bookings, held payments and payouts','Uploaded content and AI-generated designs','Contact'].map((h,i)=>'<h3 style="margin-top:24px">'+(i+1)+'. '+h+'</h3><p class="muted small">Placeholder section.</p>').join('')+'</div></section>'+footer();
+VIEWS['/terms']=()=>LEGAL('Terms and conditions','19 November 2026');
+VIEWS['/privacy']=()=>LEGAL('Privacy policy','19 November 2026');
+function notFound(){return '<section class="sec center"><div class="wrap"><h2>Page not found</h2><p class="muted">This page isn\'t part of the demo.</p><a class="btn p" href="#/">Back to home</a></div></section>'}
+
+/* ----- auth views (demo) ----- */
+VIEWS['/login']=function(){
+  return '<section class="sec"><div class="wrap" style="max-width:440px"><h2>Log in</h2><form data-form="login" novalidate><div class="fld"><label>Email</label><input name="email" type="email" value="aisha@example.com"></div><div class="fld"><label>Password</label><input name="pw" type="password" value="demo-password"></div><div class="err" id="ferr"></div><button class="btn p" style="width:100%;justify-content:center">Log in</button></form><p class="small muted" style="margin-top:14px"><a class="link" href="#/signup">Create an account</a> &middot; <button class="link" data-act="forgot">Forgot password?</button></p></div></section>'+footer();
+};
+VIEWS['/signup']=function(){
+  return '<section class="sec"><div class="wrap" style="max-width:520px"><h2>Create your account</h2><form data-form="signup" novalidate><div class="row"><div class="fld"><label>First name *</label><input name="fn" value="Aisha"></div><div class="fld"><label>Last name *</label><input name="ln" value="Khan"></div></div><div class="fld"><label>Email *</label><input name="email" type="email" value="aisha@example.com"></div><div class="fld"><label>UK mobile number *</label><input name="mob" value="07700 900123"></div><div class="row"><div class="fld"><label>Password *</label><input name="pw" type="password" value="demo-password"></div><div class="fld"><label>Confirm password *</label><input name="pw2" type="password" value="demo-password"></div></div><div class="fld"><label style="font-weight:500"><input type="checkbox" name="tc" checked> I accept the <a class="link" href="#/terms">Terms</a> and <a class="link" href="#/privacy">Privacy Policy</a></label></div><div class="err" id="ferr"></div><button class="btn p" style="width:100%;justify-content:center">Create account</button></form><div class="center muted small" style="margin:16px 0 8px">or</div><div class="row"><button class="btn" data-act="social" data-p="Google">Continue with Google</button><button class="btn" data-act="social" data-p="Apple">Continue with Apple</button></div></div></section>'+footer();
+};
+VIEWS['/verify']=function(){
+  return '<section class="sec"><div class="wrap" style="max-width:440px"><h2>Verify your email</h2><p class="muted">We sent a code to <b>'+esc(S.pend.email||'your email')+'</b>. In this demo the code is filled in for you.</p><form data-form="verify"><div class="fld"><label>Verification code</label><input name="code" value="123456"></div><div class="err" id="ferr"></div><button class="btn p" style="width:100%;justify-content:center">Verify and continue</button></form><p class="small muted" style="margin-top:12px"><button class="link" data-act="resend">Resend code</button></p></div></section>'+footer();
+};
+VIEWS['/vendor-signup']=function(){
+  return pageHead('Join as a vendor','Register your business. Our admin team reviews every application before your profile goes live.','Vendor registration')+'<section class="sec"><div class="wrap" style="max-width:640px"><form data-form="vsignup" novalidate><div class="row"><div class="fld"><label>Business name *</label><input name="bn" value="Henna Hub"></div><div class="fld"><label>Service category *</label><select name="cat">'+CATS.map(c=>'<option>'+c+'</option>').join('')+'</select></div></div><div class="row"><div class="fld"><label>Email *</label><input name="email" type="email" value="hello@hennahub.example"></div><div class="fld"><label>City and travel radius</label><input name="city" value="Leicester, 40 miles"></div></div><div class="fld"><label>About your business</label><textarea name="about">Mehndi, entrance decor and floral arches for festival events.</textarea></div><div class="fld"><label>Portfolio images</label><input type="file" multiple accept="image/*"><div class="small muted">Upload is not stored in this demo.</div></div><div class="fld"><label style="font-weight:500"><input type="checkbox" name="tc" checked> I accept the vendor Terms and conditions</label></div><div class="err" id="ferr"></div><button class="btn p lg">Submit application</button></form></div></section>'+footer();
+};
+
+/* ===== CUSTOMER VIEWS ===== */
+function gate(){return '<section class="sec center"><div class="wrap"><h2>This area is for customers</h2><p class="muted">Use the role buttons at the top to switch, or continue as the demo customer.</p><button class="btn p" data-act="role" data-r="customer">Continue as demo customer</button></div></section>'}
+const refOf=p=>!p?{kind:'sample',id:'hall'}:(p.kind==='sample'?{kind:'sample',id:p.id}:{kind:'img',key:p.key});
+
+VIEWS['/create']=function(){
+  if(S.role!=='customer')return gate();
+  const d=S.draft,steps=['Your space','Event details','How it should feel','Review'];
+  let b='';
+  if(d.step===2){
+    b='<div class="card"><h3>Tell us about the event</h3><div class="row"><div class="fld"><label>Event name *</label><input data-bind="name" value="'+esc(d.name)+'" placeholder="e.g. Diwali dinner"></div><div class="fld"><label>Event type *</label><select data-bind="type">'+Object.values(CULTURES).map(c=>'<option value="'+c.id+'" '+(d.type===c.id?'selected':'')+'>'+c.name+'</option>').join('')+'</select></div></div>'+
+    '<div class="row"><div class="fld"><label>Event date *</label><input type="date" data-bind="date" value="'+esc(d.date)+'"></div><div class="fld"><label>Guest count *</label><input type="number" min="1" data-bind="guests" value="'+esc(d.guests)+'"></div><div class="fld"><label>Approximate budget (£)</label><input type="number" min="0" data-bind="budget" value="'+esc(d.budget)+'"></div></div>'+
+    '<div class="row"><div class="fld"><label>Venue name *</label><input data-bind="venueName" value="'+esc(d.venueName)+'" placeholder="e.g. Hallmark Banquet Hall"></div><div class="fld"><label>Venue city</label><input data-bind="venueCity" value="'+esc(d.venueCity)+'"></div></div><div class="err" id="ferr"></div></div>';
+  } else if(d.step===1){
+    b='<div class="card"><h3>Add photos of your space</h3><p class="muted small">Upload up to three photos of the real room, or pick a sample venue for the demo. The design keeps your room\'s structure and layout.</p>'+
+    '<div class="grid g3" style="margin-bottom:16px">'+VENUES.map(v=>'<div class="tile" data-act="addsample" data-id="'+v.id+'"><canvas class="art" data-paint="sample:'+v.id+'" style="border-radius:0"></canvas><div class="cap"><span>'+v.name+'</span><span class="muted small">+ Use sample</span></div></div>').join('')+'</div>'+
+    '<div class="fld"><label>Or upload your own photo</label><input type="file" accept="image/*" data-up="photo"><div class="small muted">JPG or PNG. In this demo the image stays in your browser.</div></div>'+
+    (d.photos.length?'<h3 style="margin-top:22px">Your photos</h3><div class="grid g3">'+d.photos.map((p,i)=>'<div class="tile '+(d.primary===i?'sel':'')+'"><canvas class="art" data-paint="photo:'+i+'" style="border-radius:0"></canvas><div class="cap"><label style="margin:0;font-weight:600;display:flex;gap:6px;align-items:center"><input type="radio" name="prim" '+(d.primary===i?'checked':'')+' data-act="primary" data-i="'+i+'"> Primary</label><button class="link" data-act="rmphoto" data-i="'+i+'">Remove</button></div></div>').join('')+'</div>':'<div class="card flat center muted" style="background:var(--mist)">No photos yet. Pick a sample or upload one.</div>')+'<div class="err" id="ferr"></div></div>';
+  } else if(d.step===3){
+    b='<div class="card"><h3>How should it feel?</h3><p class="muted small">Pick what matters most. The '+cult(d.type).name+' culture card is applied automatically.</p><div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px">'+PREFS.map(p=>'<span class="chip '+(d.prefs.includes(p)?'on':'')+'" data-act="pref" data-p="'+p+'">'+p+'</span>').join('')+'</div>'+
+    '<div class="fld"><label>Tell us how you want it to feel</label><textarea data-bind="prompt" placeholder="e.g. Warm and welcoming, lots of marigold, soft lighting over the dining tables">'+esc(d.prompt)+'</textarea></div>'+
+    '<div class="row"><div class="fld"><label>Keep unchanged (optional)</label><input data-bind="keep" value="'+esc(d.keep)+'" placeholder="e.g. the stage and the windows"></div><div class="fld"><label>Inspiration image (optional)</label><input type="file" accept="image/*" data-up="inspo"><div class="small muted">'+(d.inspo?'Added: '+esc(d.inspo):'No image added')+'</div></div></div>'+
+    '<div class="fld"><label>Vendor-inspired design (optional)</label><select data-bind="vendorInspo"><option value="">No, use the culture card only</option>'+VENDORS.filter(v=>v.cat==='Decorators'||v.cat==='Florists').map(v=>'<option value="'+v.id+'" '+(d.vendorInspo===v.id?'selected':'')+'>Use '+v.name+'\'s portfolio as extra reference</option>').join('')+'</select></div></div>';
+  } else {
+    const c=cult(d.type),p=d.photos[d.primary];
+    b='<div class="grid g2"><div class="card"><h3>Review your brief</h3><table class="t"><tbody>'+[['Event',d.name+' ('+c.name+')'],['Date',niceDate(d.date)],['Guests',d.guests],['Budget',d.budget?money(d.budget):'Not set'],['Venue',d.venueName+', '+d.venueCity],['Preferences',d.prefs.join(', ')||'None selected'],['Your prompt',d.prompt||'None'],['Keep unchanged',d.keep||'None'],['Vendor reference',d.vendorInspo?vend(d.vendorInspo).name:'None']].map(r=>'<tr><td style="width:36%"><b>'+r[0]+'</b></td><td>'+esc(r[1])+'</td></tr>').join('')+'</tbody></table></div>'+
+    '<div><div class="card"><canvas class="art" data-paint="photo:'+d.primary+'"></canvas><div class="small muted" style="margin-top:8px">Primary venue photo</div></div><div class="card" style="margin-top:14px"><b>What happens next</b><ul class="checklist" style="margin-top:8px"><li><span class="tick">&#10003;</span>The '+c.name+' culture card ('+c.card+', draft) is applied</li><li><span class="tick">&#10003;</span>Four concepts are generated from your photo</li><li><span class="tick">&#10003;</span>Each is checked against the card</li></ul><div class="small muted">'+(S.unlocked?'This generation uses 1 of your '+S.credits+' credits.':(S.freeUsed?'Your free preview is used. A subscription is needed to generate again.':'Your first preview is free.'))+'</div></div></div></div>';
+  }
+  return '<section class="sec" style="padding-top:36px"><div class="wrap"><div class="mono">Generate Space</div><h2>Generate a space</h2><div class="stepper">'+steps.map((s,i)=>'<div class="'+(d.step===i+1?'on':(d.step>i+1?'done':''))+'">'+(i+1)+'. '+s+'</div>').join('')+'</div>'+b+
+  '<div style="display:flex;justify-content:space-between;margin-top:20px;gap:10px"><button class="btn" '+(d.step===1?'disabled':'')+' data-act="cback">Back</button>'+(d.step<4?'<button class="btn p" data-act="cnext">Continue</button>':'<button class="btn p lg" data-act="generate">Generate my designs</button>')+'</div></div></section>';
+};
+
+function runGen(opts){
+  opts=opts||{};const d=S.draft,c=cult(d.type);
+  const steps=['Reading your venue photo','Applying the '+c.name+' culture card ('+c.card+', draft)','Generating four concepts'+(d.vendorInspo?' with '+vend(d.vendorInspo).name+' as reference':''),'Checking each concept against the card','Retrying a concept that missed an item','Done'];
+  openModal('<h3>Creating your designs</h3><div class="bar"><i id="gbar"></i></div><ul class="gsteps" id="gsteps">'+steps.map((s,i)=>'<li data-i="'+i+'">'+s+'</li>').join('')+'</ul>');
+  let i=0;
+  const tick=()=>{
+    $$('#gsteps li').forEach((li,k)=>{li.className=k<i?'done':(k===i?'on':'')});
+    const bar=$('#gbar');if(bar)bar.style.width=Math.round(i/(steps.length-1)*100)+'%';
+    if(i>=steps.length-1){setTimeout(()=>{finishGen(opts);},500);return}
+    i++;setTimeout(tick,i===3?1100:800);
+  };tick();
+}
+function mkDesigns(ev,vendorInspo,src){
+  const c=cult(ev.type),base=100+(S.ids.g+1)*13;
+  return VARIANTS.map((v,i)=>{
+    const miss=v.key==='minimal'?[c.must[4]]:[];
+    return{id:'g'+(++S.ids.g),eventId:ev.id,culture:ev.type,variant:v.key,vname:v.name,seed:base+i*17,src:src,
+      checks:c.must.map(m=>!miss.includes(m)),retried:v.key==='minimal'?2:(v.key==='lavish'?1:0),status:miss.length?'review':'passed',fav:false,ver:1,vendorInspo:vendorInspo||''};
+  });
+}
+function finishGen(opts){
+  const d=S.draft;
+  const ev={id:'e'+(++S.ids.e),name:d.name||'My event',type:d.type,date:d.date,guests:d.guests,budget:d.budget,venueName:d.venueName,venueCity:d.venueCity,status:'Designs ready',final:null,created:Date.now()};
+  S.events.unshift(ev);S.cur=ev.id;
+  const src=refOf(d.photos[d.primary]);
+  S.designs=mkDesigns(ev,d.vendorInspo,src).concat(S.designs);
+  if(S.unlocked)S.credits=Math.max(0,S.credits-1);else S.freeUsed=true;
+  S.viewD=S.designs[0].id;flag('gen');flag('paywall');
+  notify('Four designs are ready for "'+ev.name+'".');save();closeModal();go('/results');
+}
+function ticksFor(d){const c=cult(d.culture);return d.checks.filter(Boolean).length+' of '+c.must.length}
+function maxVendors(){return !S.plan?3:(S.plan.id==='premium'?5:6)}
+
+VIEWS['/results']=function(){
+  if(S.role!=='customer')return gate();
+  const ev=S.events.find(e=>e.id===S.cur);
+  if(!ev)return '<section class="sec center"><div class="wrap"><h2>No designs yet</h2><p class="muted">Create your first design to see results here.</p><a class="btn p" href="#/create">Create a design</a></div></section>';
+  const ds=S.designs.filter(d=>d.eventId===ev.id),c=cult(ev.type),vd=ds.find(d=>d.id===S.viewD)||ds[0];
+  const ms=matchVendors(ev.type);
+  const dcs=ds.map(d=>'<div class="dc"><canvas class="art" data-paint="design:'+d.id+'" style="border-radius:0"></canvas><div class="bd"><div style="display:flex;justify-content:space-between;gap:8px;align-items:center"><b>'+esc(d.vname)+(d.ver>1?' v'+d.ver:'')+'</b>'+(d.status==='review'?'<span class="badge warn">Needs review '+ticksFor(d)+'</span>':'<span class="badge ok">&#10003; Checked '+ticksFor(d)+'</span>')+'</div>'+
+    '<div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap"><span class="badge draft">Draft rules '+c.card+'</span>'+(d.retried?'<span class="badge">'+d.retried+' retr'+(d.retried>1?'ies':'y')+'</span>':'')+(d.vendorInspo?'<span class="badge">Inspired by '+esc(vend(d.vendorInspo).name)+'</span>':'')+(ev.final===d.id?'<span class="badge ok">Selected design</span>':'')+'</div>'+
+    '<div class="ac"><button class="btn sm" data-act="dcompare" data-id="'+d.id+'">Compare</button><button class="btn sm" data-act="dcheck" data-id="'+d.id+'">Cultural check</button><button class="btn sm '+(d.fav?'b':'')+'" data-act="dfav" data-id="'+d.id+'">'+(d.fav?'&#9829; Saved':'&#9825; Save')+'</button><button class="btn sm" data-act="ddl" data-id="'+d.id+'">Download</button><button class="btn sm" data-act="drefine" data-id="'+d.id+'">Refine</button><button class="btn sm" data-act="dreport" data-id="'+d.id+'">Report</button><button class="btn sm p" data-act="dfinal" data-id="'+d.id+'">Use this design</button></div></div></div>').join('');
+  const chk='<div class="card" style="margin-top:20px"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap"><h3 style="margin:0">Cultural check: '+esc(vd.vname)+'</h3><span class="badge draft">Draft rules '+c.card+'. Pending expert sign-off</span></div><div class="grid g2" style="margin-top:12px"><div><div class="mono">Must include</div><ul class="checklist">'+c.must.map((m,i)=>'<li>'+(vd.checks[i]?'<span class="tick">&#10003;</span>':'<span class="cross">&#10007;</span>')+'<span>'+esc(m)+(vd.checks[i]?'':' <span class="badge warn">missing after 2 retries</span>')+'</span></li>').join('')+'</ul></div><div><div class="mono">Must avoid</div><ul class="checklist">'+c.avoid.map(a=>'<li><span class="tick">&#10003;</span><span>'+esc(a)+' <span class="muted">(none found)</span></span></li>').join('')+'</ul><p class="small muted" style="margin:8px 0 0">The automatic check can miss things. Report anything that looks wrong and an expert will review it.</p></div></div></div>';
+  const vgrid='<div class="grid g3">'+ms.map(v=>vcard(v,{cid:ev.type,select:true})).join('')+'</div>';
+  const locked=!S.unlocked;
+  return '<section class="sec" style="padding-top:30px"><div class="wrap"><div style="display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;align-items:flex-end;margin-bottom:18px"><div><div class="mono">Your designs</div><h2 style="margin:0">'+esc(ev.name)+'</h2><div class="muted small">'+c.name+' &middot; '+niceDate(ev.date)+' &middot; '+ev.guests+' guests &middot; '+esc(ev.venueName)+'</div></div><div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><span class="badge '+(S.unlocked?'ok':'draft')+'">'+(S.unlocked?S.credits+' credits left':(S.freeUsed?'Free preview used':'Free preview'))+'</span><button class="btn sm" data-act="regen">Regenerate all</button><a class="btn sm" href="#/create" data-act="editbrief">Edit brief</a></div></div>'+
+  (locked?'<div class="banner"><div class="grow"><b>Your vendor shortlist is ready.</b><div class="small">Six vendors match this design. Subscribe to unlock contact details and send quote requests.</div></div><button class="btn p" data-act="paywall">Unlock vendors</button></div>':'<div class="banner" style="background:#dff1e4"><div class="grow"><b>Vendors unlocked.</b><div class="small">Select up to '+maxVendors()+' vendors and request quotes with your chosen design.</div></div><button class="btn p" data-act="rqsel">Request quotes ('+S.sel.length+')</button></div>')+
+  '<div class="grid g2">'+dcs+'</div>'+chk+
+  '<div style="margin-top:44px"><div class="mono">Matched to your design</div><h2>Vendors who can bring this to life</h2></div>'+
+  (locked?'<div class="lockwrap"><div class="locked">'+vgrid+'</div><div class="lockcard"><div class="ic">&#128274;</div><h3>Subscribe to contact vendors</h3><p class="muted small">Your design is saved. A subscription unlocks vendor contact, quote requests and more credits. You get a subscription key straight away.</p><div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap"><button class="btn p" data-act="paywall">See plans</button><button class="btn" data-act="haveKey">I have a key</button></div></div></div>':vgrid)+'</div></section>';
+};
+
+/* ----- paywall and subscription ----- */
+function mkKey(){const a='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let s='EC';for(let i=0;i<3;i++){s+='-';for(let j=0;j<4;j++)s+=a[Math.floor(Math.random()*a.length)]}return s}
+function subHtml(){
+  const st=S.sub.stage,p=PLANS.find(x=>x.id===S.sub.plan)||PLANS[0];
+  if(st==='plans')return '<div class="mono">Subscription</div><h3>Unlock vendors and credits</h3><p class="muted small">Pick a plan. You get a subscription key immediately. Demo prices; no real payment is taken.</p><div class="grid" style="gap:10px">'+PLANS.map(x=>'<div class="card" style="display:flex;justify-content:space-between;gap:10px;align-items:center;cursor:pointer;'+(x.pop?'border-color:var(--ink)':'')+'" data-act="choosePlan" data-id="'+x.id+'"><div><b>'+x.name+'</b> '+(x.pop?'<span class="badge draft">Popular</span>':'')+'<div class="small muted">'+x.credits+' credits &middot; '+x.feats[1]+'</div></div><div><b>'+money(x.price)+'</b><span class="small muted">/mo</span></div></div>').join('')+'</div><hr style="border:0;border-top:1px solid var(--chalk);margin:18px 0"><div class="fld"><label>Already have a subscription key?</label><div class="row" style="flex-wrap:nowrap"><input id="keyin" placeholder="EC-XXXX-XXXX-XXXX" style="flex:2"><button class="btn" style="flex:1;min-width:90px" data-act="applyKey">Apply</button></div><div class="small muted">Demo tip: <b>EC-DEMO-2026</b> always works.</div><div class="err" id="kerr"></div></div>';
+  if(st==='pay')return '<div class="mono">Checkout</div><h3>'+p.name+' plan</h3><table class="t" style="margin-bottom:14px"><tbody><tr><td>'+p.name+' plan, monthly</td><td style="text-align:right">'+money(p.price)+'</td></tr><tr><td>Included</td><td style="text-align:right">'+p.credits+' AI credits</td></tr><tr><td>VAT (shown at checkout)</td><td style="text-align:right">'+money(Math.round(p.price*0.2*100)/100)+'</td></tr><tr><td><b>Total today</b></td><td style="text-align:right"><b>'+money(Math.round(p.price*1.2*100)/100)+'</b></td></tr></tbody></table><div class="card flat" style="background:var(--mist)"><b>Payment method</b><div class="small muted">Test card &bull;&bull;&bull;&bull; 4242. This is a demo; no money moves.</div></div><p class="small muted" style="margin-top:10px">Renews monthly. Cancel before the next billing date. By paying you accept the subscription Terms.</p><div style="display:flex;gap:8px;justify-content:space-between"><button class="btn" data-act="subback">Back</button><button class="btn p" data-act="payNow" id="paybtn">Pay '+money(Math.round(p.price*1.2*100)/100)+' (test mode)</button></div>';
+  return '<div class="center"><div style="width:46px;height:46px;border-radius:50%;background:var(--yellow);border:1.5px solid var(--ink);display:grid;place-items:center;margin:0 auto 10px;font-size:1.2rem">&#10003;</div><h3>You\'re subscribed</h3><p class="muted">Here is your subscription key. Keep it safe: you can enter it on any device to unlock vendors.</p><div class="keybox" id="keybox">'+esc(S.key)+'</div><div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap"><button class="btn" data-act="copyKey">Copy key</button><button class="btn p" data-act="subdone">Unlock my vendors</button></div><p class="small muted" style="margin-top:12px">'+S.credits+' credits added to your account.</p></div>';
+}
+function paywall(){S.sub.stage='plans';openModal(subHtml())}
+function unlock(planId){
+  const p=PLANS.find(x=>x.id===planId)||PLANS[0];S.plan={id:p.id,name:p.name};S.credits=(S.credits||0)+p.credits;S.unlocked=true;
+}
+
+/* ----- vendor profile + quote request ----- */
+function vAvail(v){const off=S.avail[v.id]||[];const out=[];for(let i=8;out.length<6&&i<40;i+=2){const dt=inDays(i);if(!off.includes(dt))out.push(dt)}return out}
+function profileModal(id){
+  const v=vend(id),open=S.unlocked&&S.role==='customer';
+  openModal('<div style="height:110px;border-radius:12px;background:linear-gradient(135deg,'+v.c[0]+','+v.c[1]+');margin:-6px 0 14px;position:relative"><span class="badge" style="position:absolute;right:10px;top:10px">Sample vendor</span></div><h3>'+esc(v.name)+'</h3><div class="muted small">'+esc(v.cat)+' &middot; '+esc(v.city)+' &middot; &#9733; '+v.rating+' ('+v.jobs+' jobs, sample data) &middot; '+v.price+'</div><p style="margin-top:10px">'+esc(v.blurb)+'</p>'+
+  '<div class="mono">Specialties</div><div style="display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 14px">'+v.skills.map(s=>'<span class="badge">'+esc(s)+'</span>').join('')+v.cultures.map(c=>'<span class="badge ok">'+cult(c).name+'</span>').join('')+'</div>'+
+  '<div class="mono">Portfolio</div><div class="grid g3" style="margin:6px 0 14px">'+[0,1,2].map(i=>'<div style="aspect-ratio:1;border-radius:10px;background:linear-gradient('+(120+i*50)+'deg,'+v.c[i%2]+','+v.c[(i+1)%2]+');display:grid;place-items:end start;padding:8px;color:#fff;font-size:.75rem;text-shadow:0 1px 4px rgba(0,0,0,.4)">Past work '+(i+1)+'</div>').join('')+'</div>'+
+  '<div class="mono">Next available dates</div><div class="small muted" style="margin:6px 0 16px">'+vAvail(v).slice(0,4).map(niceDate).join(' &middot; ')+'</div>'+
+  (open?'<button class="btn p" data-act="rq" data-id="'+v.id+'">Request a quote</button>':'<button class="btn b" data-act="paywall">&#128274; Subscribe to contact this vendor</button>'));
+}
+function rqModal(){
+  const ev=S.events.find(e=>e.id===S.cur);
+  if(!ev){openModal('<h3>Create a design first</h3><p class="muted">Quote requests include your chosen design, so make one first.</p><a class="btn p" href="#/create">Create a design</a>');return}
+  const des=S.designs.find(d=>d.id===ev.final)||S.designs.find(d=>d.eventId===ev.id);
+  const vs=S.sel.map(vend);
+  openModal('<div class="mono">Quote request</div><h3>Ask '+vs.length+' vendor'+(vs.length>1?'s':'')+' for a quote</h3><div class="grid g2"><div><canvas class="art" data-paint="design:'+des.id+'"></canvas><div class="small muted" style="margin-top:6px">Attached: '+esc(des.vname)+(ev.final===des.id?' (your selected design)':'')+'</div></div><div><b>'+esc(ev.name)+'</b><div class="small muted">'+cult(ev.type).name+' &middot; '+niceDate(ev.date)+' &middot; '+ev.guests+' guests &middot; '+esc(ev.venueName)+', '+esc(ev.venueCity)+'</div><div style="margin:10px 0;display:flex;gap:6px;flex-wrap:wrap">'+vs.map(v=>'<span class="badge">'+esc(v.name)+'</span>').join('')+'</div><div class="fld"><label>Anything the vendor should know?</label><textarea id="rqnote" placeholder="Access times, must-have items, dietary needs...">Please quote for the full design shown, including setup and take-down.</textarea></div></div></div><div style="display:flex;justify-content:flex-end"><button class="btn p" data-act="sendQuotes">Send request</button></div>');
+}
+function vendorPrice(v,ev,i){const f=.9+((v.base+i*37)%30)/100;return Math.round(v.base*f*(ev.guests>150?1.15:1)/10)*10}
+function sendQuotes(){
+  const ev=S.events.find(e=>e.id===S.cur),des=S.designs.find(d=>d.id===ev.final)||S.designs.find(d=>d.eventId===ev.id),note=($('#rqnote')||{}).value||'';
+  S.sel.forEach((vid,i)=>{
+    const v=vend(vid),q={id:'q'+(++S.ids.q),vendorId:vid,eventId:ev.id,designId:des.id,service:v.cat,price:null,status:'Awaiting quote',rc:0,rv:0,chat:[{f:'me',t:note||'Hi, we would like a quote for this design.'}],created:Date.now()};
+    S.quotes.unshift(q);
+    setTimeout(()=>{const qq=S.quotes.find(x=>x.id===q.id);if(!qq)return;qq.price=vendorPrice(v,ev,i);qq.status='Quote received';qq.chat.push({f:'v',t:'Thanks for the details. Our quote is '+money(qq.price)+' including setup and take-down.'});notify(v.name+' sent you a quote: '+money(qq.price));save();if((location.hash||'').indexOf('quotes')>-1)render()},1600+i*1100);
+  });
+  ev.status='Quotes requested';flag('quote');S.sel=[];closeModal();save();notify('Quote requests sent to '+S.quotes.filter(q=>q.eventId===ev.id).length+' vendor(s).');go('/quotes');toast('Quote requests sent. Replies arrive in a moment.');
+}
+
+/* ----- quotes ----- */
+const stBadge=s=>'<span class="badge '+({'Quote received':'ok','Accepted':'ok','Booked':'ok','Rejected':'bad','Negotiation':'warn'}[s]||'')+'">'+s+'</span>';
+VIEWS['/quotes']=function(){
+  if(S.role!=='customer')return gate();
+  const rows=S.quotes.map(q=>{const v=vend(q.vendorId),ev=S.events.find(e=>e.id===q.eventId);return '<tr><td><input type="checkbox" data-act="qcmp" data-id="'+q.id+'" '+(S.cmp.includes(q.id)?'checked':'')+'></td><td><b>'+esc(v.name)+'</b><div class="small muted">'+esc(q.service)+'</div></td><td>'+esc(ev?ev.name:'')+'</td><td>'+(q.price?money(q.price):'<span class="muted">Waiting...</span>')+'</td><td>'+stBadge(q.status)+'</td><td><button class="btn sm" data-act="qopen" data-id="'+q.id+'">Open</button></td></tr>'}).join('');
+  return '<section class="sec" style="padding-top:36px"><div class="wrap"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:flex-end"><div><div class="mono">Quotations</div><h2>Your quote requests</h2></div><button class="btn" data-act="qcompare">Compare selected</button></div>'+
+  (rows?'<div class="tw"><table class="t"><thead><tr><th></th><th>Vendor</th><th>Event</th><th>Quote</th><th>Status</th><th></th></tr></thead><tbody>'+rows+'</tbody></table></div>':'<div class="card center muted">No quote requests yet. Find vendors from your results page.<div class="sp"></div><a class="btn p" href="#/results">See my designs</a></div>')+'</div></section>';
+};
+function qModal(id){
+  const q=S.quotes.find(x=>x.id===id);if(!q)return;const v=vend(q.vendorId);
+  const live=q.status==='Quote received'||q.status==='Negotiation';
+  openModal('<div class="mono">Quotation</div><h3>'+esc(v.name)+'</h3><div class="muted small">'+esc(q.service)+' &middot; '+stBadge(q.status)+'</div><div style="display:flex;justify-content:space-between;align-items:baseline;margin:10px 0"><span class="muted small">Current quote</span><b style="font:400 2rem Bricolage Grotesque,sans-serif">'+(q.price?money(q.price):'Waiting for reply')+'</b></div>'+
+  '<div class="small muted">Negotiation: you have used '+q.rc+' of 3 rounds; vendor '+q.rv+' of 3.</div><div class="chat" id="chatbox">'+q.chat.map(m=>'<div class="msg '+(m.f==='me'?'me':'')+'">'+esc(m.t)+'</div>').join('')+'</div>'+
+  (live?'<div class="row" style="flex-wrap:nowrap;align-items:flex-end"><div class="fld" style="margin:0;flex:2"><label>Counter offer (£)</label><input id="counter" type="number" min="1" placeholder="e.g. '+Math.round(q.price*.85/10)*10+'"></div><button class="btn" style="flex:1;min-width:110px" data-act="qcounter" data-id="'+q.id+'" '+(q.rc>=3?'disabled':'')+'>Send offer</button></div><div class="err" id="qerr"></div><div style="display:flex;gap:8px;justify-content:space-between;margin-top:14px"><button class="btn" data-act="qreject" data-id="'+q.id+'">Reject</button><button class="btn p" data-act="qaccept" data-id="'+q.id+'">Accept this quote</button></div>':'')+
+  (q.status==='Accepted'?'<button class="btn p" style="margin-top:10px" data-act="qbook" data-id="'+q.id+'">Book and pay</button>':''));
+  const cb=$('#chatbox');if(cb)cb.scrollTop=cb.scrollHeight;
+}
+function counter(id){
+  const q=S.quotes.find(x=>x.id===id),v=vend(q.vendorId),val=+($('#counter')||{}).value;
+  if(!val||val<=0){$('#qerr').textContent='Enter an amount.';return}
+  if(val>=q.price){$('#qerr').textContent='Your offer should be lower than the current quote.';return}
+  if(q.rc>=3){$('#qerr').textContent='You have used all three negotiation rounds.';return}
+  q.rc++;q.chat.push({f:'me',t:'Could you do '+money(val)+'?'});save();qModal(id);
+  setTimeout(()=>{
+    if(val>=q.price*.9||q.rv>=3){q.price=val;q.chat.push({f:'v',t:'That works. '+money(val)+' it is.'});q.status='Quote received'}
+    else{q.rv++;const np=Math.round((q.price+val)/2/10)*10;q.price=np;q.chat.push({f:'v',t:'We can meet you at '+money(np)+'.'});q.status='Negotiation'}
+    notify(v.name+' replied to your offer.');save();const m=$('.mbox');if(m&&m.textContent.indexOf(v.name)>-1&&m.textContent.indexOf('Quotation')>-1)qModal(id);if(location.hash.indexOf('quotes')>-1)render()
+  },1300);
+}
+function compareModal(){
+  const qs=S.quotes.filter(q=>S.cmp.includes(q.id)&&q.price);
+  if(qs.length<2){toast('Tick at least two quotes that have a price.');return}
+  openModal('<h3>Compare quotes</h3><div class="tw"><table class="t"><thead><tr><th>Vendor</th><th>Service</th><th>City</th><th>Rating</th><th>Quote</th><th>Status</th></tr></thead><tbody>'+qs.map(q=>{const v=vend(q.vendorId);return '<tr><td><b>'+esc(v.name)+'</b></td><td>'+esc(q.service)+'</td><td>'+esc(v.city)+'</td><td>&#9733; '+v.rating+'</td><td><b>'+money(q.price)+'</b></td><td>'+stBadge(q.status)+'</td></tr>'}).join('')+'</tbody></table></div>',true);
+}
+function bookModal(id){
+  const q=S.quotes.find(x=>x.id===id),v=vend(q.vendorId),ev=S.events.find(e=>e.id===q.eventId);
+  openModal('<div class="mono">Booking</div><h3>Book '+esc(v.name)+'</h3><table class="t" style="margin:10px 0"><tbody><tr><td>Service</td><td>'+esc(q.service)+'</td></tr><tr><td>Event</td><td>'+esc(ev.name)+', '+niceDate(ev.date)+'</td></tr><tr><td>Agreed price</td><td><b>'+money(q.price)+'</b></td></tr></tbody></table><div class="fld"><label>Payment arrangement (to be confirmed with the client)</label><select id="payopt"><option value="full">Pay in full now</option><option value="dep">Pay a 30% deposit now, the rest later</option></select></div><div class="card flat" style="background:var(--mist)"><b>Your money is held safely.</b><div class="small muted">Payment is held by the platform until the service is complete. Then the vendor requests a payout. Test mode: no real payment.</div></div><div style="display:flex;justify-content:flex-end;margin-top:14px"><button class="btn p" data-act="payBooking" data-id="'+id+'">Pay and confirm booking (test)</button></div>');
+}
+function payBooking(id){
+  const q=S.quotes.find(x=>x.id===id),opt=$('#payopt').value,ev=S.events.find(e=>e.id===q.eventId);
+  const paid=opt==='dep'?Math.round(q.price*.3):q.price;
+  S.bookings.unshift({id:'b'+(++S.ids.b),quoteId:id,vendorId:q.vendorId,eventId:ev.id,service:q.service,amount:q.price,paid:paid,date:ev.date||inDays(14),status:'Confirmed',rs:0});
+  q.status='Booked';ev.status='Booked';flag('book');notify('Booking confirmed with '+vend(q.vendorId).name+'. '+money(paid)+' is held.');save();closeModal();go('/bookings');toast('Booking confirmed. Funds are held until the job is done.');
+}
+VIEWS['/bookings']=function(){
+  if(S.role!=='customer')return gate();
+  const rows=S.bookings.map(b=>{const v=vend(b.vendorId),ev=S.events.find(e=>e.id===b.eventId);
+    return '<tr><td><b>'+esc(v.name)+'</b><div class="small muted">'+esc(b.service)+'</div></td><td>'+esc(ev?ev.name:'')+'</td><td>'+niceDate(b.date)+'</td><td>'+money(b.amount)+'<div class="small muted">'+money(b.paid)+' held</div></td><td><span class="badge '+(b.status==='Completed'?'ok':(b.status==='Disputed'?'bad':''))+'">'+b.status+'</span></td><td>'+(b.status==='Confirmed'?'<button class="btn sm" data-act="bres" data-id="'+b.id+'">Reschedule</button> <button class="btn sm p" data-act="bcomplete" data-id="'+b.id+'">Mark complete</button> <button class="btn sm" data-act="bdispute" data-id="'+b.id+'">Raise dispute</button>':'')+'</td></tr>'}).join('');
+  return '<section class="sec" style="padding-top:36px"><div class="wrap"><div class="mono">Bookings</div><h2>My bookings</h2>'+(rows?'<div class="tw"><table class="t"><thead><tr><th>Vendor</th><th>Event</th><th>Date</th><th>Amount</th><th>Status</th><th></th></tr></thead><tbody>'+rows+'</tbody></table></div>':'<div class="card center muted">No bookings yet. Accept a quote to book a vendor.<div class="sp"></div><a class="btn p" href="#/quotes">See my quotes</a></div>')+'</div></section>';
+};
+function reschedModal(id){
+  const b=S.bookings.find(x=>x.id===id),v=vend(b.vendorId);
+  openModal('<h3>Reschedule with '+esc(v.name)+'</h3><p class="muted small">Only dates this vendor has marked available are shown.</p><div class="fld"><select id="newdate">'+vAvail(v).map(d=>'<option value="'+d+'">'+niceDate(d)+'</option>').join('')+'</select></div><button class="btn p" data-act="doRes" data-id="'+id+'">Confirm new date</button>');
+}
+function disputeModal(id){openModal('<h3>Raise a dispute</h3><p class="muted small">Tell us what went wrong. The payment stays held while our team reviews it.</p><div class="fld"><textarea id="dreason" placeholder="What happened?"></textarea></div><button class="btn p" data-act="doDispute" data-id="'+id+'">Submit dispute</button>')}
+
+/* ----- dashboard, events, profile, notifications ----- */
+VIEWS['/dashboard']=function(){
+  if(S.role!=='customer')return gate();
+  const act=S.quotes.filter(q=>q.status!=='Rejected'&&q.status!=='Booked').length,conf=S.bookings.filter(b=>b.status==='Confirmed').length;
+  const stats=[[S.events.length,'Active events'],[S.designs.length,'AI designs'],[act,'Open quote requests'],[conf,'Confirmed bookings'],[S.unlocked?S.credits:(S.freeUsed?0:1),S.unlocked?'AI credits left':'Free previews left']];
+  return '<section class="sec" style="padding-top:36px"><div class="wrap"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:flex-end"><div><div class="mono">Dashboard</div><h2>Welcome back, '+esc(S.user.name.split(' ')[0])+'</h2></div><div style="display:flex;gap:8px"><button class="btn" data-act="export">Export summary</button><a class="btn p" href="#/create">Create event</a></div></div><div class="grid g4" style="grid-template-columns:repeat(5,1fr);margin:20px 0" id="stats">'+stats.map(s=>'<div class="stat"><b>'+s[0]+'</b><span>'+s[1]+'</span></div>').join('')+'</div><style>@media(max-width:900px){#stats{grid-template-columns:repeat(2,1fr)!important}}</style>'+
+  '<div class="grid g2"><div><h3>Recent and upcoming events</h3>'+(S.events.length?S.events.slice(0,4).map(e=>'<div class="card" style="margin-bottom:10px;display:flex;justify-content:space-between;gap:10px;align-items:center"><div><b>'+esc(e.name)+'</b><div class="small muted">'+cult(e.type).name+' &middot; '+niceDate(e.date)+' &middot; '+esc(e.venueName)+'</div></div><div><span class="badge">'+e.status+'</span> <button class="btn sm" data-act="eopen" data-id="'+e.id+'">Open</button></div></div>').join(''):'<div class="card center muted">No events yet.<div class="sp"></div><a class="btn p sm" href="#/create">Create your first event</a></div>')+'</div>'+
+  '<div><h3>Recent activity</h3>'+(S.notes.length?'<div class="card">'+S.notes.slice(0,6).map(n=>'<div style="padding:8px 0;border-bottom:1px solid var(--chalk)">'+esc(n.text)+'<div class="small muted">'+new Date(n.t).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})+'</div></div>').join('')+'</div>':'<div class="card center muted">No activity yet.</div>')+'</div></div></div></section>';
+};
+VIEWS['/events']=function(){
+  if(S.role!=='customer')return gate();
+  return '<section class="sec" style="padding-top:36px"><div class="wrap"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:flex-end"><div><div class="mono">My events</div><h2>Your events</h2></div><a class="btn p" href="#/create">Create event</a></div><div class="grid g3" style="margin-top:20px">'+
+  (S.events.length?S.events.map(e=>{const d=S.designs.find(x=>x.eventId===e.id);return '<div class="dc"><canvas class="art" style="border-radius:0" data-paint="design:'+(d?d.id:'')+'"></canvas><div class="bd"><b>'+esc(e.name)+'</b><div class="small muted">'+cult(e.type).name+' &middot; '+niceDate(e.date)+' &middot; '+e.guests+' guests</div><div style="margin:6px 0"><span class="badge">'+e.status+'</span> <span class="badge">'+S.designs.filter(x=>x.eventId===e.id).length+' designs</span> <span class="badge">'+S.quotes.filter(x=>x.eventId===e.id).length+' quotes</span></div><div class="ac"><button class="btn sm p" data-act="eopen" data-id="'+e.id+'">Open</button><button class="btn sm" data-act="eresults" data-id="'+e.id+'">Designs</button></div></div></div>'}).join(''):'<div class="card center muted" style="grid-column:1/-1">No events yet. Create one to get started.</div>')+'</div></div></section>';
+};
+function eventModal(id){
+  const e=S.events.find(x=>x.id===id),bk=S.bookings.filter(b=>b.eventId===id);
+  openModal('<div class="mono">Event details</div><h3>'+esc(e.name)+'</h3><table class="t"><tbody>'+[['Type',cult(e.type).name],['Date',niceDate(e.date)],['Guests',e.guests],['Budget',e.budget?money(e.budget):'Not set'],['Venue',e.venueName+', '+e.venueCity],['Status',e.status],['Designs',S.designs.filter(d=>d.eventId===id).length],['Quote requests',S.quotes.filter(q=>q.eventId===id).length],['Confirmed bookings',bk.length]].map(r=>'<tr><td style="width:40%"><b>'+r[0]+'</b></td><td>'+esc(r[1])+'</td></tr>').join('')+'</tbody></table>'+(bk.length?'<p class="small muted">This event has a confirmed booking. Changing the date may affect the vendor.</p>':'')+'<div style="display:flex;gap:8px;margin-top:12px"><button class="btn" data-act="eresults" data-id="'+id+'">View designs</button><button class="btn" data-act="eedit" data-id="'+id+'">Edit details</button></div>');
+}
+VIEWS['/profile']=function(){
+  if(S.role!=='customer')return gate();
+  return '<section class="sec" style="padding-top:36px"><div class="wrap grid g2" style="gap:30px"><div class="card"><div class="mono">Profile</div><h3>'+esc(S.user.name)+'</h3><table class="t"><tbody><tr><td><b>Email</b></td><td>'+esc(S.user.email)+'</td></tr><tr><td><b>Mobile</b></td><td>'+esc(S.user.mobile||'')+'</td></tr><tr><td><b>Status</b></td><td><span class="badge ok">Verified</span></td></tr></tbody></table><div style="display:flex;gap:8px;margin-top:14px"><button class="btn" data-act="chpw">Change password</button><button class="btn" data-act="logout">Log out</button></div></div>'+
+  '<div class="card"><div class="mono">Subscription</div>'+(S.unlocked?'<h3>'+esc(S.plan?S.plan.name:'Premium')+' plan</h3><p class="muted small">'+S.credits+' credits left. Renews monthly.</p><div class="mono">Your subscription key</div><div class="keybox" style="font-size:1.05rem">'+esc(S.key||'EC-DEMO-2026')+'</div><button class="btn sm" data-act="cancelSub">Cancel subscription (demo)</button>':'<h3>No active plan</h3><p class="muted small">Subscribe to unlock vendors, refinements and more credits.</p><button class="btn p" data-act="paywall">See plans</button>')+'</div></div></section>';
+};
+VIEWS['/notifications']=function(){
+  if(S.role!=='customer')return gate();
+  S.notes.forEach(n=>n.read=true);save();
+  return '<section class="sec" style="padding-top:36px"><div class="wrap" style="max-width:720px"><div class="mono">Notifications</div><h2>Alerts</h2>'+(S.notes.length?S.notes.map(n=>'<div class="card" style="margin-bottom:10px">'+esc(n.text)+'<div class="small muted">'+new Date(n.t).toLocaleString('en-GB')+'</div></div>').join(''):'<div class="card center muted">Nothing yet.</div>')+'</div></section>';
+};
+
+/* ===== VENDOR + ADMIN VIEWS ===== */
+['vSt','payoutSt','dispSt','leadSt','avail'].forEach(k=>{S[k]=S[k]||{}});['reports','contacts','extraPend'].forEach(k=>{S[k]=S[k]||[]});
+const tbl=(h,rows,empty)=>rows.length?'<div class="tw"><table class="t"><thead><tr>'+h.map(x=>'<th>'+x+'</th>').join('')+'</tr></thead><tbody>'+rows.map(r=>'<tr>'+r.map(c=>'<td>'+c+'</td>').join('')+'</tr>').join('')+'</tbody></table></div>':'<div class="card center muted">'+(empty||'Nothing here yet.')+'</div>';
+const sideNav=(base,items,cur)=>'<div class="sidenav">'+items.map(i=>'<a class="'+(cur===i[0]?'on':'')+'" href="#'+base+(i[0]?'/'+i[0]:'')+'">'+i[1]+'</a>').join('')+'</div>';
+const COMM=0.10;
+
+function vLeads(){
+  const id=S.vAct;
+  const dummy=VENDOR_LEADS.map(l=>({id:l.id,customer:l.customer,event:l.event,budget:l.budget,status:S.leadSt[l.id]||'New',live:false}));
+  const live=S.quotes.filter(q=>q.vendorId===id).map(q=>{const ev=S.events.find(e=>e.id===q.eventId);return{id:q.id,customer:S.user?S.user.name:'Customer',event:(ev?ev.name+', '+ev.guests+' guests':''),budget:ev&&ev.budget?money(ev.budget):'',status:q.status,live:true,price:q.price}});
+  return live.concat(dummy);
+}
+VIEWS['/v']=function(parts){
+  if(S.role!=='vendor')return '<section class="sec center"><div class="wrap"><h2>This area is for vendors</h2><button class="btn p" data-act="role" data-r="vendor">Continue as demo vendor</button></div></section>';
+  const tab=parts[1]||'',v=vend(S.vAct),nav=sideNav('/v',[['','Dashboard'],['leads','Leads and quotes'],['bookings','Bookings'],['availability','Availability'],['earnings','Earnings'],['profile','Profile']],tab);
+  const sw='<div style="display:flex;gap:8px;align-items:center;margin-bottom:18px;flex-wrap:wrap"><span class="small muted">Demo: act as</span><select data-vact style="width:auto">'+VENDORS.map(x=>'<option value="'+x.id+'" '+(x.id===S.vAct?'selected':'')+'>'+esc(x.name)+'</option>').join('')+'</select></div>';
+  const leads=vLeads(),bks=S.bookings.filter(b=>b.vendorId===S.vAct),pays=S.payouts.filter(p=>p.vendorId===S.vAct);
+  let body='';
+  if(tab===''){
+    const paid=pays.filter(p=>S.payoutSt[p.id]==='Paid').reduce((a,p)=>a+p.amount-p.commission,0);
+    body='<div class="grid g4"><div class="stat"><b>'+leads.filter(l=>l.status==='New'||l.status==='Awaiting quote').length+'</b><span>New leads</span></div><div class="stat"><b>'+leads.filter(l=>l.status==='Quote received'||l.status==='Quoted'||l.status==='Negotiation').length+'</b><span>Quotes sent</span></div><div class="stat"><b>'+bks.length+'</b><span>Bookings</span></div><div class="stat"><b>'+money(paid)+'</b><span>Paid out</span></div></div><h3 style="margin-top:26px">Latest leads</h3>'+tbl(['Customer','Event','Budget','Status'],leads.slice(0,4).map(l=>[esc(l.customer),esc(l.event),esc(l.budget),'<span class="badge">'+l.status+'</span>']));
+  } else if(tab==='leads'){
+    body='<h3>Leads and quotes</h3>'+tbl(['Customer','Event','Budget','Status',''],leads.map(l=>[esc(l.customer),esc(l.event),esc(l.budget),'<span class="badge '+(l.live&&l.price?'ok':'')+'">'+l.status+(l.price?' ('+money(l.price)+')':'')+'</span>',(!l.live&&l.status==='New')?'<button class="btn sm p" data-act="vlead" data-id="'+l.id+'">Send quote</button>':(l.live?'<span class="small muted">Customer designs attached</span>':'')]),'No leads yet.');
+  } else if(tab==='bookings'){
+    body='<h3>Bookings</h3>'+tbl(['Customer','Service','Date','Amount','Status',''],bks.map(b=>[esc(S.user?S.user.name:'Customer'),esc(b.service),niceDate(b.date),money(b.amount),'<span class="badge">'+b.status+'</span>',b.status==='Confirmed'?'<button class="btn sm" data-act="vevid">Upload completion evidence</button>':'']),'No bookings yet. Book this vendor as the customer to see it here.');
+  } else if(tab==='availability'){
+    const off=S.avail[S.vAct]||[];let cells='<div class="h">Mon</div><div class="h">Tue</div><div class="h">Wed</div><div class="h">Thu</div><div class="h">Fri</div><div class="h">Sat</div><div class="h">Sun</div>';
+    const start=new Date();const pad=(start.getDay()+6)%7;for(let i=0;i<pad;i++)cells+='<div style="visibility:hidden"></div>';
+    for(let i=0;i<28;i++){const dt=inDays(i);cells+='<div class="'+(off.includes(dt)?'off':'')+'" data-act="vday" data-d="'+dt+'">'+new Date(dt+'T12:00:00').getDate()+'</div>'}
+    body='<h3>Availability calendar</h3><p class="muted small">Click a day to mark it unavailable. Customers only see and reschedule to available dates.</p><div class="cal">'+cells+'</div>';
+  } else if(tab==='earnings'){
+    body='<h3>Earnings and payouts</h3><p class="muted small">Commission: '+Math.round(COMM*100)+'% (demo). Payouts are requested when the customer marks a job complete and approved by admin.</p>'+tbl(['Booking','Amount','Commission','You receive','Status'],pays.map(p=>['#'+p.bid,money(p.amount),money(p.commission),'<b>'+money(p.amount-p.commission)+'</b>','<span class="badge '+(S.payoutSt[p.id]==='Paid'?'ok':'')+'">'+(S.payoutSt[p.id]||'Requested')+'</span>']),'No payouts yet. Complete a booking as the customer to create one.');
+  } else {
+    body='<h3>Business profile</h3><div class="grid g2"><div class="card"><b>'+esc(v.name)+'</b><div class="muted small">'+esc(v.cat)+' &middot; '+esc(v.city)+'</div><p style="margin-top:10px">'+esc(v.blurb)+'</p><div style="display:flex;gap:6px;flex-wrap:wrap">'+v.skills.map(s=>'<span class="badge">'+esc(s)+'</span>').join('')+'</div></div><div class="card"><b>Portfolio</b><div class="grid g3" style="margin-top:8px">'+[0,1,2].map(i=>'<div style="aspect-ratio:1;border-radius:10px;background:linear-gradient('+(120+i*50)+'deg,'+v.c[i%2]+','+v.c[(i+1)%2]+')"></div>').join('')+'</div></div></div>';
+  }
+  return '<section class="sec" style="padding-top:30px"><div class="wrap"><div class="mono">Vendor dashboard</div><h2>'+esc(v.name)+'</h2>'+sw+nav+body+'</div></section>';
+};
+VIEWS['/a']=function(parts){
+  if(S.role!=='admin')return '<section class="sec center"><div class="wrap"><h2>This area is for admins</h2><button class="btn p" data-act="role" data-r="admin">Continue as demo admin</button></div></section>';
+  const tab=parts[1]||'';
+  const nav=sideNav('/a',[['','Dashboard'],['customers','Customers'],['vendors','Vendors'],['plans','Subscription plans'],['events','Events'],['bookings','Bookings'],['disputes','Disputes'],['payouts','Payouts'],['cms','CMS and settings'],['staff','Staff and roles']],tab);
+  const pend=ADMIN_PENDING.concat(S.extraPend),disp=ADMIN_DISPUTES.map(d=>({id:d.id,who:d.who,reason:d.reason})).concat(S.disputes.map(d=>({id:d.id,who:d.who,reason:d.reason}))),pays=ADMIN_PAYOUTS.map(p=>({id:p.id,vendor:p.vendor,amount:p.amount,commission:Math.round(p.amount*COMM)})).concat(S.payouts.map(p=>({id:p.id,vendor:vend(p.vendorId).name,amount:p.amount,commission:p.commission})));
+  let body='';
+  if(tab===''){
+    const gmv=S.bookings.reduce((a,b)=>a+b.amount,0);
+    body='<div class="grid g4"><div class="stat"><b>'+(ADMIN_CUSTOMERS.length+(S.user?1:0))+'</b><span>Customers</span></div><div class="stat"><b>'+(VENDORS.length+pend.filter(p=>S.vSt[p.id]==='Approved').length)+'</b><span>Approved vendors</span></div><div class="stat"><b>'+pend.filter(p=>!S.vSt[p.id]).length+'</b><span>Vendor applications</span></div><div class="stat"><b>'+disp.filter(d=>!S.dispSt[d.id]).length+'</b><span>Open disputes</span></div></div>'+
+    '<div class="grid g2" style="margin-top:20px"><div class="card"><h3>Bookings value (demo)</h3><div class="kpi">'+[40,55,48,70,62,85,gmv?Math.min(100,30+gmv/60):90].map(h=>'<i style="height:'+h+'%"></i>').join('')+'</div><div class="small muted" style="margin-top:6px">Live bookings: '+money(gmv)+' &middot; Commission at '+Math.round(COMM*100)+'%: '+money(Math.round(gmv*COMM))+'</div></div><div class="card"><h3>Reports</h3><p class="muted small">Export customers, vendors, bookings, transactions and payouts.</p><button class="btn" data-act="export">Export report (CSV)</button></div></div>'+
+    '<h3 style="margin-top:24px">Needs your attention</h3>'+tbl(['Item','Detail',''],pend.filter(p=>!S.vSt[p.id]).map(p=>['Vendor application',esc(p.name)+' ('+esc(p.cat)+')','<a class="btn sm" href="#/a/vendors">Review</a>']).concat(S.reports.map(r=>['Design report',esc(r),'<span class="badge warn">Expert review queue</span>'])).concat(S.contacts.map(c=>['Contact enquiry',esc(c),''])),'Nothing waiting.');
+  } else if(tab==='customers'){
+    body='<h3>Customers</h3>'+tbl(['Name','Email','City','Plan','Status'],ADMIN_CUSTOMERS.map(c=>[esc(c[0]),esc(c[1]),esc(c[2]),c[3],'<span class="badge '+(c[4]==='Active'?'ok':'bad')+'">'+c[4]+'</span>']).concat(S.user?[[esc(S.user.name)+' <span class="badge draft">you</span>',esc(S.user.email),'London',S.plan?S.plan.name:'None','<span class="badge ok">Active</span>']]:[]));
+  } else if(tab==='vendors'){
+    body='<h3>Vendor applications</h3>'+tbl(['Business','Category','City','Status',''],pend.map(p=>[esc(p.name),esc(p.cat),esc(p.city||''),'<span class="badge '+(S.vSt[p.id]==='Approved'?'ok':(S.vSt[p.id]==='Rejected'?'bad':'warn'))+'">'+(S.vSt[p.id]||'Pending')+'</span>',S.vSt[p.id]?'':'<button class="btn sm p" data-act="aappr" data-id="'+p.id+'">Approve</button> <button class="btn sm" data-act="arej" data-id="'+p.id+'">Reject</button>']))+'<h3 style="margin-top:24px">Approved vendors</h3>'+tbl(['Business','Category','City','Rating'],VENDORS.map(v=>[esc(v.name),esc(v.cat),esc(v.city),'&#9733; '+v.rating]));
+  } else if(tab==='plans'){
+    body='<h3>Subscription plans</h3>'+tbl(['Plan','Price / month','AI credits','Status',''],PLANS.map(p=>[p.name,money(p.price),p.credits,'<span class="badge ok">Active</span>','<button class="btn sm" data-act="aedit" data-n="'+p.name+' plan">Edit</button>']));
+  } else if(tab==='events'){
+    body='<h3>Events</h3>'+tbl(['Event','Type','Date','Guests','Status'],S.events.map(e=>[esc(e.name),cult(e.type).name,niceDate(e.date),e.guests,'<span class="badge">'+e.status+'</span>']),'No customer events yet. Create one as the customer.')+'<h3 style="margin-top:24px">Event types and vendor categories</h3><div class="grid g2"><div class="card">'+Object.values(CULTURES).map(c=>'<span class="badge ok" style="margin:2px">'+c.name+'</span>').join('')+'<span class="badge" style="margin:2px">Weddings (coming soon)</span></div><div class="card">'+CATS.map(c=>'<span class="badge" style="margin:2px">'+c+'</span>').join('')+'</div></div>';
+  } else if(tab==='bookings'){
+    body='<h3>Bookings and transactions</h3>'+tbl(['Booking','Vendor','Amount','Held','Commission','Status'],S.bookings.map(b=>['#'+b.id,esc(vend(b.vendorId).name),money(b.amount),money(b.paid),money(Math.round(b.amount*COMM)),'<span class="badge">'+b.status+'</span>']),'No bookings yet.');
+  } else if(tab==='disputes'){
+    body='<h3>Disputes</h3>'+tbl(['Parties','Reason','Status',''],disp.map(d=>[esc(d.who),esc(d.reason),'<span class="badge '+(S.dispSt[d.id]?'ok':'warn')+'">'+(S.dispSt[d.id]||'Open')+'</span>',S.dispSt[d.id]?'':'<button class="btn sm" data-act="adres" data-id="'+d.id+'" data-w="customer">Favour customer</button> <button class="btn sm" data-act="adres" data-id="'+d.id+'" data-w="vendor">Favour vendor</button>']));
+  } else if(tab==='payouts'){
+    body='<h3>Vendor payouts</h3><p class="muted small">Commission: '+Math.round(COMM*100)+'% (demo). Approve a payout to release the held funds, minus commission.</p>'+tbl(['Vendor','Amount','Commission','Net payout','Status',''],pays.map(p=>[esc(p.vendor),money(p.amount),money(p.commission),'<b>'+money(p.amount-p.commission)+'</b>','<span class="badge '+(S.payoutSt[p.id]==='Paid'?'ok':'warn')+'">'+(S.payoutSt[p.id]||'Requested')+'</span>',S.payoutSt[p.id]==='Paid'?'':'<button class="btn sm p" data-act="apay" data-id="'+p.id+'">Approve payout</button>']));
+  } else if(tab==='cms'){
+    body='<h3>Content pages</h3>'+tbl(['Page','Last updated',''],['Landing page','About us','FAQs','Terms and conditions','Privacy policy'].map(n=>[n,'19 Nov 2026','<button class="btn sm" data-act="aedit" data-n="'+n+'">Edit</button>']))+'<h3 style="margin-top:24px">Platform settings</h3><div class="grid g2"><div class="card"><div class="fld"><label>Commission</label><input value="10%" disabled></div><div class="fld"><label>Currency</label><input value="GBP (pounds)" disabled></div></div><div class="card"><div class="fld"><label>Negotiation rounds per side</label><input value="3" disabled></div><div class="fld"><label>Max vendors per quote request</label><input value="5" disabled></div></div></div><h3 style="margin-top:24px">Contact form requests</h3>'+tbl(['Message'],S.contacts.map(c=>[esc(c)]),'No contact enquiries yet. Send one from the Contact page.');
+  } else {
+    body='<h3>Staff and roles</h3>'+tbl(['Role','Dashboard','Vendors','Payouts','Disputes','CMS'],[['Super admin','Yes','Yes','Yes','Yes','Yes'],['Support','Yes','View','No','Yes','No'],['Finance','Yes','View','Yes','View','No']])+'<div class="sp"></div>'+tbl(['Staff','Email','Role','Status'],[['Nora Ellis','nora@eventculture.example','Super admin','Active'],['Sam Okoye','sam@eventculture.example','Support','Active'],['Lia Chen','lia@eventculture.example','Finance','Active']]);
+  }
+  return '<section class="sec" style="padding-top:30px"><div class="wrap"><div class="mono">Admin panel</div><h2>Platform admin</h2>'+nav+body+'</div></section>';
+};
+
+/* ===== ACTIONS ===== */
+const ACT={};
+function setRole(r){
+  S.role=r;if(r==='customer'&&!S.user)S.user={name:'Aisha Khan',email:'aisha@example.com',mobile:'07700 900123'};
+  if(r==='vendor'){const q=S.quotes[0];if(q)S.vAct=q.vendorId}
+  save();go(r==='visitor'?'/':r==='customer'?'/dashboard':r==='vendor'?'/v':'/a');
+}
+ACT.role=el=>setRole(el.dataset.r);
+ACT.reset=()=>{try{localStorage.removeItem('ecdemo')}catch(e){}S=clone(DEF);['vSt','payoutSt','dispSt','leadSt','avail'].forEach(k=>{S[k]={}});['reports','contacts','extraPend'].forEach(k=>{S[k]=[]});MEM.imgs={};closeModal();toast('Demo reset');go('/');render()};
+ACT.mback=(el,e)=>{if(e.target===el)closeModal()};ACT.closeModal=()=>closeModal();
+ACT.gtoggle=()=>{guideOpen=!guideOpen;guide()};
+ACT.gstep=el=>{guideOpen=false;const k=el.dataset.k;if(k==='quote'||k==='key'||k==='paywall'){if(S.role!=='customer'||!S.cur)return go(S.role==='customer'?'/create':'/signup')}if(k==='payout'){setRole('admin');go('/a/payouts');return}if(S.role!=='customer'&&k!=='payout'){setRole('customer');}go(el.dataset.p)};
+ACT.slide=()=>{};
+ACT.tryculture=el=>{S.draft.type=el.dataset.c;save();go(S.role==='customer'?'/create':'/signup')};
+ACT.gfilter=el=>{S.gf.c=el.dataset.c;save();render()};
+ACT.gopen=el=>{const c=el.dataset.c,v=el.dataset.v,vr=el.dataset.vr,s=el.dataset.seed;openModal('<div class="mono">'+cult(c).name+' &middot; '+VENUES.find(x=>x.id===v).name+'</div><h3>'+VARIANTS.find(x=>x.key===vr).name+'</h3>'+cmpSlider('sample:'+v,'gal:'+c+':'+v+':'+vr+':'+s)+'<p class="muted small" style="margin-top:12px">Drag to compare the original venue with the AI-generated concept. Results vary with your own venue photo and preferences.</p><button class="btn p" data-act="tryculture" data-c="'+c+'">Create a design like this</button>',true)};
+ACT.choosePlan=el=>{S.sub.plan=el.dataset.id;if(S.role!=='customer'){toast('Create an account first, then choose a plan.');return go('/signup')}S.sub.stage='pay';openModal(subHtml())};
+ACT.paywall=()=>{if(S.role!=='customer'){toast('Log in as a customer first.');return go('/signup')}paywall()};
+ACT.haveKey=()=>{paywall();setTimeout(()=>{const k=$('#keyin');if(k)k.focus()},50)};
+ACT.subback=()=>{S.sub.stage='plans';openModal(subHtml())};
+ACT.payNow=()=>{const b=$('#paybtn');if(b){b.textContent='Processing payment...';b.disabled=true}setTimeout(()=>{S.key=mkKey();unlock(S.sub.plan);S.sub.stage='done';flag('key');save();notify('Subscription active. Your key is '+S.key);header();openModal(subHtml())},1200)};
+ACT.applyKey=()=>{const v=(($('#keyin')||{}).value||'').trim().toUpperCase();if(v&&(v===S.key||v==='EC-DEMO-2026')){if(!S.key)S.key=v;if(!S.unlocked)unlock('premium');flag('key');save();closeModal();toast('Key accepted. Vendors unlocked.');render()}else{const e=$('#kerr');if(e)e.textContent='That key was not recognised.'}};
+ACT.copyKey=()=>{try{navigator.clipboard.writeText(S.key)}catch(e){}toast('Key copied')};
+ACT.subdone=()=>{closeModal();render();toast('Vendors unlocked')};
+ACT.forgot=()=>openModal('<h3>Reset your password</h3><div class="fld"><label>Email</label><input value="aisha@example.com"></div><button class="btn p" data-act="closeModal" onclick="toast(\'Reset link sent (demo)\')">Send reset link</button>');
+ACT.social=el=>{S.role='customer';S.user={name:'Aisha Khan',email:'aisha@example.com',mobile:'07700 900123'};save();toast('Signed in with '+el.dataset.p+' (demo)');go('/dashboard')};
+ACT.resend=()=>toast('A new code was sent (demo)');
+ACT.vprofile=el=>profileModal(el.dataset.id);
+ACT.vsel=(el,e)=>{const id=el.dataset.id;if(e.target.checked){if(S.sel.length>=maxVendors()){e.target.checked=false;toast('Your plan allows up to '+maxVendors()+' vendors per request.');return}S.sel.push(id)}else S.sel=S.sel.filter(x=>x!==id);save();render()};
+ACT.rq=el=>{S.sel=[el.dataset.id];closeModal();rqModal()};
+ACT.rqsel=()=>{if(!S.sel.length){toast('Select at least one vendor first.');return}rqModal()};
+ACT.sendQuotes=()=>sendQuotes();
+ACT.addsample=el=>{const d=S.draft;if(d.photos.length>=3){toast('You can add up to three photos.');return}d.photos.push({kind:'sample',id:el.dataset.id,name:'Sample venue'});flag('upload');save();render()};
+ACT.primary=el=>{S.draft.primary=+el.dataset.i;save();render()};
+ACT.rmphoto=el=>{const d=S.draft;d.photos.splice(+el.dataset.i,1);d.primary=0;save();render()};
+ACT.pref=el=>{const d=S.draft,p=el.dataset.p;d.prefs=d.prefs.includes(p)?d.prefs.filter(x=>x!==p):d.prefs.concat(p);save();render()};
+ACT.cback=()=>{S.draft.step=Math.max(1,S.draft.step-1);save();render()};
+ACT.cnext=()=>{
+  const d=S.draft,err=m=>{const e=$('#ferr');if(e)e.textContent=m};
+  if(d.step===2){if(!d.name.trim())return err('Please add an event name.');if(!d.date)return err('Please choose an event date.');if(!(d.guests>0))return err('Guest count must be more than zero.');if(!d.venueName.trim())return err('Please add the venue name.')}
+  if(d.step===1&&!d.photos.length)return err('Add at least one venue photo to continue.');
+  d.step++;save();render();window.scrollTo(0,0);
+};
+ACT.generate=()=>{
+  const d=S.draft;if(!d.photos.length){toast('Add a venue photo first.');return}
+  if(!S.unlocked&&S.freeUsed){toast('Your free preview is used. Subscribe to generate again.');return paywall()}
+  if(S.unlocked&&S.credits<1){toast('You are out of credits.');return paywall()}
+  runGen({});
+};
+ACT.regen=()=>{
+  if(!S.unlocked){toast('Regenerating needs a subscription.');return paywall()}
+  if(S.credits<1){toast('You are out of credits.');return paywall()}
+  runGen({regen:true});
+};
+const _finishGen=finishGen;
+finishGen=function(o){
+  if(o&&o.regen){const ev=S.events.find(e=>e.id===S.cur),first=S.designs.find(d=>d.eventId===ev.id);const nd=mkDesigns(ev,first.vendorInspo,first.src);S.designs=nd.concat(S.designs);S.credits=Math.max(0,S.credits-1);S.viewD=nd[0].id;notify('New designs generated for "'+ev.name+'".');save();closeModal();render();toast('Four new designs added. Your earlier ones are kept.')}
+  else _finishGen(o);
+};
+ACT.editbrief=()=>{S.draft.step=1;save()};
+ACT.dcompare=el=>{const id=el.dataset.id,d=S.designs.find(x=>x.id===id);openModal('<div class="mono">Compare</div><h3>'+esc(d.vname)+'</h3>'+cmpSlider('orig:'+id,'design:'+id)+'<p class="muted small" style="margin-top:10px">The design keeps your venue\'s structure and layout. Drag to compare.</p>',true)};
+ACT.dcheck=el=>{S.viewD=el.dataset.id;save();render();setTimeout(()=>{const x=$$('.card h3').find(h=>h.textContent.indexOf('Cultural check')===0);if(x)x.scrollIntoView({behavior:'smooth',block:'center'})},30)};
+ACT.dfav=el=>{const d=S.designs.find(x=>x.id===el.dataset.id);d.fav=!d.fav;save();render()};
+ACT.ddl=el=>{const d=S.designs.find(x=>x.id===el.dataset.id),cv=document.createElement('canvas');paintDesign(cv,srcOf(d.src),d.culture,d.variant,d.seed);cv.toBlob(b=>{const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='eventculture-'+d.variant+'.png';a.click();toast('Design downloaded')})};
+ACT.drefine=el=>{
+  if(!S.unlocked){toast('Refining needs a subscription.');return paywall()}
+  if(S.credits<1){toast('You are out of credits.');return paywall()}
+  openModal('<h3>Refine this design</h3><p class="muted small">Describe what to change. A new version is added and your original is kept. Uses 1 credit ('+S.credits+' left).</p><div class="fld"><textarea id="rtext" placeholder="e.g. More marigold, softer lighting, keep the stage as is"></textarea></div><button class="btn p" data-act="doRefine" data-id="'+el.dataset.id+'">Generate new version</button>');
+};
+ACT.doRefine=el=>{const d=S.designs.find(x=>x.id===el.dataset.id),t=($('#rtext')||{}).value||'';const nd=Object.assign({},d,{id:'g'+(++S.ids.g),ver:d.ver+1,seed:d.seed+7,checks:d.checks.map(()=>true),retried:0,status:'passed',fav:false,note:t});S.designs.unshift(nd);S.credits=Math.max(0,S.credits-1);S.viewD=nd.id;notify('Refined design ready: '+d.vname+' v'+nd.ver);save();closeModal();render();toast('New version added')};
+ACT.dreport=el=>openModal('<h3>Report an inaccuracy</h3><p class="muted small">Tell us what looks culturally wrong. It goes to the admin queue and the expert reviewer for this culture.</p><div class="fld"><select id="rtype"><option>An item looks wrong</option><option>Something important is missing</option><option>Something offensive or inappropriate</option><option>Other</option></select></div><div class="fld"><textarea id="rdet" placeholder="What did you notice?"></textarea></div><button class="btn p" data-act="doReport" data-id="'+el.dataset.id+'">Send report</button>');
+ACT.doReport=el=>{const d=S.designs.find(x=>x.id===el.dataset.id);S.reports.unshift(d.vname+' ('+cult(d.culture).name+'): '+$('#rtype').value);save();closeModal();toast('Thanks. Your report is in the expert review queue.')};
+ACT.dfinal=el=>{const d=S.designs.find(x=>x.id===el.dataset.id),ev=S.events.find(e=>e.id===d.eventId);ev.final=d.id;save();render();toast('Design selected. It will be attached to quote requests.')};
+ACT.qcmp=(el,e)=>{const id=el.dataset.id;S.cmp=e.target.checked?S.cmp.concat(id):S.cmp.filter(x=>x!==id);save()};
+ACT.qcompare=()=>compareModal();
+ACT.qopen=el=>qModal(el.dataset.id);
+ACT.qcounter=el=>counter(el.dataset.id);
+ACT.qreject=el=>{const q=S.quotes.find(x=>x.id===el.dataset.id);q.status='Rejected';q.chat.push({f:'me',t:'Thanks, we will pass on this one.'});save();closeModal();render()};
+ACT.qaccept=el=>{const q=S.quotes.find(x=>x.id===el.dataset.id);q.status='Accepted';q.chat.push({f:'me',t:'We accept your quote.'});save();qModal(q.id);render()};
+ACT.qbook=el=>bookModal(el.dataset.id);
+ACT.payBooking=el=>payBooking(el.dataset.id);
+ACT.bres=el=>reschedModal(el.dataset.id);
+ACT.doRes=el=>{const b=S.bookings.find(x=>x.id===el.dataset.id);b.date=$('#newdate').value;b.rs++;notify('Booking moved to '+niceDate(b.date)+' with '+vend(b.vendorId).name+'.');save();closeModal();render();toast('Booking rescheduled')};
+ACT.bcomplete=el=>{const b=S.bookings.find(x=>x.id===el.dataset.id);b.status='Completed';S.payouts.unshift({id:'po'+b.id,bid:b.id,vendorId:b.vendorId,amount:b.amount,commission:Math.round(b.amount*COMM)});notify('Job marked complete. '+vend(b.vendorId).name+' can now be paid.');save();render();toast('Marked complete. A payout request was created for the vendor.')};
+ACT.bdispute=el=>disputeModal(el.dataset.id);
+ACT.doDispute=el=>{const b=S.bookings.find(x=>x.id===el.dataset.id),t=($('#dreason')||{}).value||'No details given';b.status='Disputed';S.disputes.unshift({id:'dx'+(++S.ids.d),who:(S.user?S.user.name:'Customer')+' vs '+vend(b.vendorId).name,reason:t});notify('Dispute raised. The payment stays held while we review.');save();closeModal();render()};
+ACT.export=()=>{const rows=[['type','name','detail','status']].concat(S.events.map(e=>['event',e.name,cult(e.type).name+' '+e.date,e.status])).concat(S.quotes.map(q=>['quote',vend(q.vendorId).name,q.price||'',q.status])).concat(S.bookings.map(b=>['booking',vend(b.vendorId).name,b.amount,b.status]));const csv=rows.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='eventculture-summary.csv';a.click();toast('Summary exported')};
+ACT.eopen=el=>eventModal(el.dataset.id);
+ACT.eresults=el=>{S.cur=el.dataset.id;save();closeModal();go('/results')};
+ACT.eedit=el=>{const e=S.events.find(x=>x.id===el.dataset.id);openModal('<h3>Edit event</h3><div class="fld"><label>Name</label><input id="en" value="'+esc(e.name)+'"></div><div class="row"><div class="fld"><label>Date</label><input id="ed" type="date" value="'+esc(e.date)+'"></div><div class="fld"><label>Guests</label><input id="eg" type="number" value="'+esc(e.guests)+'"></div></div><button class="btn p" data-act="doEdit" data-id="'+e.id+'">Save changes</button>')};
+ACT.doEdit=el=>{const e=S.events.find(x=>x.id===el.dataset.id);e.name=$('#en').value||e.name;e.date=$('#ed').value||e.date;e.guests=+$('#eg').value||e.guests;save();closeModal();render();toast('Event updated')};
+ACT.chpw=()=>toast('Password reset email sent (demo)');
+ACT.logout=()=>{S.role='visitor';save();go('/')};
+ACT.cancelSub=()=>{S.unlocked=false;S.plan=null;S.credits=0;save();render();toast('Subscription cancelled. Vendors are locked again.')};
+ACT.vlead=el=>openModal('<h3>Send a quote</h3><div class="fld"><label>Your price (£)</label><input id="vlp" type="number" value="1200"></div><div class="fld"><label>Message</label><textarea>Happy to help. This includes setup and take-down.</textarea></div><button class="btn p" data-act="doVL" data-id="'+el.dataset.id+'">Send quote</button>');
+ACT.doVL=el=>{S.leadSt[el.dataset.id]='Quoted';save();closeModal();render();toast('Quote sent to the customer')};
+ACT.vday=el=>{const d=el.dataset.d,a=S.avail[S.vAct]=S.avail[S.vAct]||[];const i=a.indexOf(d);i>-1?a.splice(i,1):a.push(d);save();render()};
+ACT.vevid=()=>toast('Completion evidence uploaded (demo). The customer can now mark the job complete.');
+ACT.aappr=el=>{S.vSt[el.dataset.id]='Approved';save();render();toast('Vendor approved. Their profile is now live.')};
+ACT.arej=el=>{S.vSt[el.dataset.id]='Rejected';save();render()};
+ACT.adres=el=>{S.dispSt[el.dataset.id]='Resolved ('+el.dataset.w+')';save();render();toast('Dispute resolved')};
+ACT.apay=el=>{S.payoutSt[el.dataset.id]='Paid';flag('payout');save();render();toast('Payout approved. Held funds released, minus commission.')};
+ACT.aedit=el=>openModal('<h3>Edit: '+esc(el.dataset.n)+'</h3><div class="fld"><textarea>Content for "'+esc(el.dataset.n)+'" goes here. In the real build, admins edit this with a rich text editor.</textarea></div><button class="btn p" data-act="closeModal" onclick="toast(\'Saved (demo)\')">Save</button>');
+
+/* ===== EVENT WIRING ===== */
+document.addEventListener('click',e=>{const el=e.target.closest('[data-act]');if(!el)return;const f=ACT[el.dataset.act];if(!f)return;if(el.tagName==='A'&&el.dataset.act==='editbrief'){f(el,e);return}f(el,e)});
+document.addEventListener('input',e=>{
+  const t=e.target;
+  if(t.dataset.bind){const d=S.draft;d[t.dataset.bind]=t.type==='number'?+t.value:t.value;save();return}
+  if(t.dataset.vf!==undefined){S.vf[t.dataset.vf]=t.value;save();const l=$('#vlist');if(l)l.innerHTML=vlist();return}
+  if(t.dataset.act==='slide'){const w=t.closest('.cmp'),v=+t.value;w.querySelector('.top').style.clipPath='inset(0 '+(100-v)+'% 0 0)';w.querySelector('.hd').style.left=v+'%'}
+});
+document.addEventListener('change',e=>{
+  const t=e.target;
+  if(t.dataset.bind&&t.tagName==='SELECT'){S.draft[t.dataset.bind]=t.value;save();if(t.dataset.bind==='type')render();return}
+  if(t.dataset.vf!==undefined){S.vf[t.dataset.vf]=t.value;save();const l=$('#vlist');if(l)l.innerHTML=vlist();return}
+  if(t.dataset.vact!==undefined){S.vAct=t.value;save();render();return}
+  if(t.dataset.up&&t.files&&t.files[0]){
+    const f=t.files[0],kind=t.dataset.up;
+    if(kind==='inspo'){S.draft.inspo=f.name;save();render();return}
+    if(S.draft.photos.length>=3){toast('You can add up to three photos.');return}
+    const r=new FileReader();r.onload=()=>{const img=new Image();img.onload=()=>{const key='u'+Date.now();MEM.imgs[key]=img;S.draft.photos.push({kind:'up',key,name:f.name});flag('upload');save();render();toast('Photo added')};img.onerror=()=>toast('That file could not be read as an image.');img.src=r.result};r.readAsDataURL(f);
+  }
+});
+document.addEventListener('submit',e=>{
+  const f=e.target.closest('[data-form]');if(!f)return;e.preventDefault();
+  const v=n=>(f.elements[n]?f.elements[n].value.trim():''),err=m=>{const x=$('#ferr');if(x)x.textContent=m};
+  const mail=/^[^@\s]+@[^@\s]+\.[^@\s]+$/,uk=/^(\+44\s?7\d{3}|07\d{3})\s?\d{3}\s?\d{3}$/;
+  const k=f.dataset.form;
+  if(k==='contact'){if(!v('name')||!v('msg'))return err('Name and message are required.');if(!mail.test(v('email')))return err('Please enter a valid email address.');S.contacts.unshift(v('name')+': '+v('msg').slice(0,60));save();toast('Message sent. We will reply soon.');f.reset();err('')}
+  else if(k==='login'){if(!mail.test(v('email'))||!v('pw'))return err('Enter your email and password.');setRole('customer')}
+  else if(k==='signup'){
+    if(!v('fn')||!v('ln'))return err('Please enter your first and last name.');if(!mail.test(v('email')))return err('Please enter a valid email address.');if(!uk.test(v('mob')))return err('Please enter a valid UK mobile number, for example 07700 900123.');if(v('pw').length<8)return err('Password must be at least 8 characters.');if(v('pw')!==v('pw2'))return err('Passwords do not match.');if(!f.elements.tc.checked)return err('Please accept the Terms and Privacy Policy.');
+    S.pend={email:v('email'),name:v('fn')+' '+v('ln'),mobile:v('mob')};save();go('/verify')}
+  else if(k==='verify'){if(v('code')!=='123456')return err('That code is not right. In this demo it is 123456.');S.role='customer';S.user={name:S.pend.name||'Aisha Khan',email:S.pend.email||'aisha@example.com',mobile:S.pend.mobile||''};notify('Welcome to EventCulture AI. Your account is verified.');save();go('/dashboard')}
+  else if(k==='vsignup'){if(!v('bn'))return err('Business name is required.');if(!mail.test(v('email')))return err('Please enter a valid email address.');S.extraPend.push({id:'px'+Date.now(),name:v('bn'),cat:v('cat'),city:v('city'),status:'Pending'});save();openModal('<h3>Application submitted</h3><p class="muted">Thanks, '+esc(v('bn'))+'. Our admin team will review your application. You can approve it yourself in the Admin view of this demo.</p><button class="btn p" data-act="role" data-r="admin">Open admin view</button>')}
+});
+
+
+/* ===== Layout overrides: page structure follows the current live site ===== */
+PLANS.length=0;
+PLANS.push(
+ {id:'premium',name:'Premium',price:9.99,credits:40,blurb:'For one big celebration.',feats:['40 AI generation credits a month','Contact up to 5 vendors per event','Refine and regenerate designs','Vendor-inspired designs','Save and share mood boards'],pop:true},
+ {id:'elite',name:'Elite',price:29.99,credits:120,blurb:'When you want a human in the loop.',feats:['120 AI generation credits a month','Everything in Premium','Dedicated human planner','Vendor concierge and negotiation','On-the-day coordination']}
+);
+S.favV=S.favV||[];
+const dvf=()=>({ev:[],cat:[],city:[],rating:0,budget:3000,sort:'match'});S.vf=dvf();DEF.vf=dvf();DEF.favV=[];DEF.heroPick=0;DEF.pend={};
+
+/* ----- header with hamburger, centred nav, user icon ----- */
+const ICON_USER='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>';
+const ICON_BELL='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0112 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10 21a2 2 0 004 0"/></svg>';
+const _oldHeader=header;
+const AUTH=['/login','/signup','/verify'];
+header=function(){
+  const path=location.hash.slice(1)||'/',r=S.role,first='/'+(path.split('/').filter(Boolean)[0]||'');
+  $('#hdr').style.display=(r==='visitor'&&AUTH.includes(first))?'none':'';
+  if(r==='vendor'||r==='admin')return _oldHeader();
+  const on=p=>(p==='/'?path==='/':(path===p||path.startsWith(p+'/')))?'on':'';
+  const nav=[['/','Home'],['/vendors','Vendors'],['/create','Generate Space']].concat(r==='customer'?[['/dashboard','Dashboard']]:[]);
+  const un=S.notes.filter(n=>!n.read).length;
+  const right=r==='customer'?'<a class="circ" href="#/notifications" title="Alerts">'+ICON_BELL+(un?'<i class="dot">'+un+'</i>':'')+'</a><a class="circ" href="#/profile" title="Profile">'+esc(S.user?S.user.name[0]:'U')+'</a>':'<a class="small" href="#/login" style="font-weight:800;text-decoration:none">Log in</a><a class="circ" href="#/login" title="Log in">'+ICON_USER+'</a>';
+  $('#hdr').innerHTML='<div class="in"><button class="circ" data-act="menu" aria-label="Menu">&#9776;</button><a class="logo" href="#/'+(r==='customer'?'dashboard':'')+'">EventCulture AI</a><nav class="nav">'+nav.map(n=>'<a class="'+on(n[0])+'" href="#'+n[0]+'">'+n[1]+'</a>').join('')+'</nav><div class="hr">'+right+'</div></div>';
+};
+ACT.menu=()=>openModal('<div class="mono">Menu</div><div class="menu">'+[['/','Home'],['/how','How it works'],['/explore','Explore designs'],['/vendors','Find vendors'],['/create','Generate Space'],['/pricing','Pricing'],['/for-vendors','For vendors'],['/about','About us'],['/faq','FAQs'],['/contact','Contact us'],['/terms','Terms and conditions'],['/privacy','Privacy policy']].map(l=>'<a href="#'+l[0]+'" data-act="closeModal">'+l[1]+'</a>').join('')+'</div>');
+ACT.slidepick=el=>{S.heroPick=+el.dataset.i;save();render()};
+ACT.enterprise=()=>toast('Thanks. The team will be in touch (demo).');
+ACT.vfav=el=>{const id=el.dataset.id;S.favV=S.favV.includes(id)?S.favV.filter(x=>x!==id):S.favV.concat(id);save();render()};
+
+/* ----- footer ----- */
+footer=function(){
+  const col=(t,l)=>'<div><div class="mono" style="color:var(--lilac)">'+t+'</div>'+l.map(x=>'<a href="#'+x[0]+'">'+x[1]+'</a>').join('')+'</div>';
+  return '<footer><div class="wrap"><div class="grid g4" style="grid-template-columns:1.4fr 1fr 1fr 1fr 1fr"><div><div class="logo" style="color:#fff">EventCulture AI</div><p class="small" style="opacity:.7;margin-top:10px">The calm, visual way to design unforgettable celebrations.</p></div>'+
+  col('Celebrations',[['/explore','Cultural'],['/explore','Diwali'],['/explore','Eid'],['/explore','Lunar New Year']])+
+  col('Platform',[['/how','How it works'],['/vendors','Marketplace'],['/pricing','Pricing'],['/vendor-signup','Vendor Portal']])+
+  col('Resources',[['/explore','Design gallery'],['/for-vendors','For vendors'],['/about','About us'],['/faq','FAQs']])+
+  col('Support',[['/contact','Contact'],['/privacy','Privacy'],['/terms','Terms']])+
+  '</div><p class="small" style="opacity:.6;margin:28px 0 0">&copy; 2026 EventCulture AI &middot; <a style="display:inline" href="#/privacy">Privacy</a> &middot; <a style="display:inline" href="#/terms">Terms</a> &middot; Interactive demo with dummy data</p></div></footer><style>@media(max-width:900px){footer .g4{grid-template-columns:repeat(2,1fr)!important}}</style>';
+};
+
+/* ----- plans and pricing ----- */
+planCard=function(p){
+  return '<div class="card plan '+(p.pop?'pop':'')+'">'+(p.pop?'<span class="badge draft" style="position:absolute;top:-12px;right:16px">Most Popular</span>':'')+'<h3>'+p.name+'</h3><div class="muted small">'+p.blurb+'</div><div class="pr">'+money(p.price)+'<span class="small muted"> /month</span></div><ul>'+p.feats.map(f=>'<li>'+f+'</li>').join('')+'</ul><button class="btn '+(p.pop?'p':'')+'" style="width:100%;justify-content:center" data-act="choosePlan" data-id="'+p.id+'">'+(p.id==='elite'?'Start Elite':'Start Premium')+'</button></div>';
+};
+function pricingBlock(){
+  const free='<div class="card plan"><h3>Free</h3><div class="muted small">Try it on your space.</div><div class="pr">&pound;0<span class="small muted"> /forever</span></div><ul><li>Your first set of four AI concepts</li><li>Upload your own venue photo</li><li>Explore vendor recommendations</li><li>Save one mood board</li><li>Basic event customisation</li></ul><a class="btn" style="width:100%;justify-content:center" href="#/create">Get Started</a></div>';
+  return '<div class="grid g3">'+free+PLANS.map(planCard).join('')+'</div><div class="card" style="margin-top:18px;display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;align-items:center;background:var(--lilac)"><div><span class="badge draft">Coming soon &middot; For teams</span><h3 style="margin:8px 0 2px">Planning 50+ events a year? Let\'s talk Enterprise.</h3><div class="small">Custom workspaces, brand controls, dedicated account management and invoicing.</div></div><button class="btn" data-act="enterprise">Request Enterprise Access</button></div>';
+}
+VIEWS['/pricing']=function(){
+  return pageHead('Start free. <span class="acc">Upgrade if you need more.</span>','Your first set of designs is free. Bookings cost only what vendors quote. Plan prices are demo values.','Pricing')+'<section class="sec"><div class="wrap">'+pricingBlock()+
+  '<div class="grid g2" style="margin-top:34px"><div class="card"><h3>Billing and renewal</h3><p class="muted small" style="margin:0">Plans renew monthly. Credits reset on renewal. Cancel before the next billing date. Taxes are shown at checkout.</p></div><div class="card"><h3>What uses a credit?</h3><p class="muted small" style="margin:0">One generation of four designs, or one refinement of a single design. Vendor requests and downloads do not use credits.</p></div></div><div style="max-width:760px;margin:40px auto 0">'+faqList(4)+'</div></div></section>'+footer();
+};
+
+/* ----- vendors page: filter sidebar + cards ----- */
+const CITIES=[...new Set(VENDORS.map(v=>v.city))];
+const vcount=f=>VENDORS.filter(f).length;
+vcard=function(v,o){
+  o=o||{};const open=S.unlocked&&S.role==='customer';
+  const badge=v.rating>=4.8?'Top rated':(v.price==='£££'?'Premium':'Verified');
+  const reason=o.cid?'<div class="small" style="color:var(--maroon);font-weight:700">'+esc(reasonFor(v,o.cid))+'</div>':'';
+  return '<div class="vcard2"><div class="vph" style="background:linear-gradient(135deg,'+v.c[0]+','+v.c[1]+')"><span class="vb">'+badge+'</span><button class="heart" data-act="vfav" data-id="'+v.id+'" aria-label="Save">'+(S.favV.includes(v.id)?'&#9829;':'&#9825;')+'</button><span class="vi">'+esc(initials(v.name))+'</span></div>'+
+  '<div class="vbd"><div class="small muted">'+esc(v.cat)+'</div><b style="font:600 1.1rem Bricolage Grotesque,sans-serif">'+esc(v.name)+'</b><div class="small muted" style="font-style:italic">&ldquo;'+esc(v.blurb)+'&rdquo;</div>'+reason+'<div class="small">'+esc(v.city)+' &bull; <b>&#9733; '+v.rating+'</b> &bull; '+v.price+'</div>'+
+  '<div class="vft"><button class="btn sm p" data-act="'+(open?'rq':'paywall')+'" data-id="'+v.id+'">'+(open?'':'&#128274; ')+'Send Brief</button><button class="btn sm" data-act="vprofile" data-id="'+v.id+'">View Work</button>'+(o.select&&open?'<label style="display:inline-flex;gap:6px;align-items:center;margin:0;font-weight:600"><input type="checkbox" data-act="vsel" data-id="'+v.id+'" '+(S.sel.includes(v.id)?'checked':'')+'> Select</label>':'')+'</div></div></div>';
+};
+function vFiltered(){
+  const f=S.vf;
+  let l=VENDORS.filter(v=>(!f.ev.length||v.cultures.some(c=>f.ev.includes(c)))&&(!f.cat.length||f.cat.includes(v.cat))&&(!f.city.length||f.city.includes(v.city))&&v.rating>=f.rating&&v.base<=f.budget);
+  if(f.sort==='rating')l.sort((a,b)=>b.rating-a.rating);else if(f.sort==='price')l.sort((a,b)=>a.base-b.base);else l.sort((a,b)=>(b.cultures.length>a.cultures.length?0:0)||b.rating-a.rating);
+  return l;
+}
+vlist=function(){const l=vFiltered();return l.length?'<div class="grid g3">'+l.map(v=>vcard(v)).join('')+'</div>':'<div class="card center muted">No vendors match these filters. <button class="link" data-act="vclear">Clear all</button></div>'};
+function vTop(){
+  const f=S.vf,chips=[];f.ev.forEach(x=>chips.push(['ev',x,cult(x).name]));f.cat.forEach(x=>chips.push(['cat',x,x]));f.city.forEach(x=>chips.push(['city',x,x]));if(f.rating)chips.push(['rating',f.rating,f.rating+' & above']);if(f.budget<3000)chips.push(['budget',f.budget,'Up to '+money(f.budget)]);
+  return '<div class="vtop" style="margin:6px 0"><div><b>'+vFiltered().length+' vendors</b> <span class="muted small">matching your filters</span></div><div style="display:flex;gap:8px;align-items:center"><span class="small muted">Sort by:</span><select data-vsort><option value="match" '+(f.sort==='match'?'selected':'')+'>Best Match</option><option value="rating" '+(f.sort==='rating'?'selected':'')+'>Top rated</option><option value="price" '+(f.sort==='price'?'selected':'')+'>Lowest price</option></select></div></div><div class="fchips">'+chips.map(c=>'<span class="fchip" data-act="vfrm" data-k="'+c[0]+'" data-v="'+c[1]+'">'+esc(c[2])+' &times;</span>').join('')+'</div>';
+}
+function vSide(){
+  const f=S.vf,cb=(k,val,label,n)=>'<label class="cbx"><input type="checkbox" data-vfa="'+k+'" data-v="'+esc(val)+'" '+(f[k].includes(val)?'checked':'')+'><span>'+esc(label)+'</span><i>'+n+'</i></label>';
+  return '<aside class="filters card" style="align-self:start"><div class="fh"><b>Filters</b><button class="link small" data-act="vclear">Clear all</button></div>'+
+  '<div class="fg"><b>Event type</b>'+Object.values(CULTURES).map(c=>cb('ev',c.id,c.name,vcount(v=>v.cultures.includes(c.id)))).join('')+'<label class="cbx" style="opacity:.5"><input type="checkbox" disabled><span>Wedding</span><i>soon</i></label></div>'+
+  '<div class="fg"><b>Budget</b><div class="small muted">Up to '+money(f.budget)+'</div><input type="range" min="300" max="3000" step="100" value="'+f.budget+'" data-vfr="budget"><div class="small muted" style="display:flex;justify-content:space-between"><span>&pound;300</span><span>&pound;3,000+</span></div></div>'+
+  '<div class="fg"><b>Vendor category</b>'+CATS.map(c=>cb('cat',c,c,vcount(v=>v.cat===c))).join('')+'</div>'+
+  '<div class="fg"><b>Rating</b>'+[[4.5,'4.5 & above'],[4,'4.0 & above'],[0,'Any rating']].map(r=>'<label class="cbx"><input type="radio" name="rt" data-vfr="rating" value="'+r[0]+'" '+(f.rating===r[0]?'checked':'')+'><span>'+r[1]+'</span></label>').join('')+'</div>'+
+  '<div class="fg"><b>Location</b>'+CITIES.map(c=>cb('city',c,c,vcount(v=>v.city===c))).join('')+'</div></aside>';
+}
+VIEWS['/vendors']=function(){
+  return '<section class="sec" style="padding:52px 0 18px"><div class="wrap center"><h1 style="font-size:clamp(2rem,4.4vw,3.2rem);max-width:760px;margin:0 auto .3em">Vendors ready to bring <span class="acc">your vision to life.</span></h1><p class="muted">Discover verified vendors who match your aesthetic, budget and event style. These are sample vendors for the demo.</p></div></section>'+
+  '<section class="sec" style="padding-top:10px"><div class="wrap">'+(S.role==='customer'&&!S.unlocked?'<div class="banner"><div class="grow"><b>Subscribe to send briefs to vendors.</b><div class="small">You can browse every profile now. Contact needs a subscription key.</div></div><button class="btn p sm" data-act="paywall">See plans</button></div>':'')+
+  '<div class="vlayout">'+vSide()+'<div><h2 style="font-size:1.7rem;margin-bottom:.2em">Meet the vendors who can build it for real.</h2><div id="vtop">'+vTop()+'</div><div id="vlist">'+vlist()+'</div></div></div></div></section>'+footer();
+};
+function vRefresh(){const a=$('#vtop'),b=$('#vlist');if(a)a.innerHTML=vTop();if(b)b.innerHTML=vlist()}
+ACT.vclear=()=>{S.vf=dvf();render()};
+ACT.vfrm=el=>{const k=el.dataset.k,v=el.dataset.v;if(k==='rating')S.vf.rating=0;else if(k==='budget')S.vf.budget=3000;else S.vf[k]=S.vf[k].filter(x=>x!==v);render()};
+document.addEventListener('change',e=>{
+  const t=e.target;
+  if(t.dataset.vfa){const k=t.dataset.vfa,v=t.dataset.v;S.vf[k]=t.checked?S.vf[k].concat(v):S.vf[k].filter(x=>x!==v);vRefresh()}
+  else if(t.dataset.vfr==='rating'){S.vf.rating=+t.value;vRefresh()}
+  else if(t.dataset.vsort!==undefined){S.vf.sort=t.value;vRefresh()}
+});
+document.addEventListener('input',e=>{const t=e.target;if(t.dataset.vfr==='budget'){S.vf.budget=+t.value;vRefresh();const b=t.parentNode.querySelector('.small');if(b)b.textContent='Up to '+money(S.vf.budget)}});
+
+/* ----- customer account tab bar ----- */
+function acct(cur){return '<div class="wrap" style="padding-top:26px"><div class="sidenav" style="margin:0">'+[['/dashboard','Overview'],['/events','My events'],['/quotes','Quotes'],['/bookings','Bookings'],['/notifications','Alerts'],['/profile','Profile']].map(i=>'<a class="'+(cur===i[0]?'on':'')+'" href="#'+i[0]+'">'+i[1]+'</a>').join('')+'</div></div>'}
+['/dashboard','/events','/quotes','/bookings','/notifications','/profile'].forEach(k=>{const o=VIEWS[k];VIEWS[k]=function(p){const h=o(p);return S.role==='customer'?acct(k)+h:h}});
+
+/* ----- split-screen login, signup and verify ----- */
+const mosaic=()=>'<div class="mosaic">'+[['diwali','hall','lavish',12],['eid','garden','classic',22],['lny','restaurant','classic',32],['eid','hall','evening',24],['lny','garden','lavish',34],['diwali','restaurant','evening',14],['eid','restaurant','classic',26],['lny','hall','evening',36],['diwali','garden','classic',16]].map(x=>'<canvas data-paint="gal:'+x.join(':')+'"></canvas>').join('')+'</div>';
+function authPage(inner){
+  return '<div class="auth"><div class="aform"><a class="logo" href="#/">EventCulture AI</a><div class="ain">'+inner+'</div><div class="small muted">&copy; 2026 EventCulture AI &middot; <a href="#/privacy">Privacy</a> &middot; <a href="#/terms">Terms</a></div></div><div class="aside">'+mosaic()+'<div class="ov"><div class="big">Your venue.<br>Four concepts.<br>One calm next step.</div><div class="stats"><div><b>4</b><span>designs per request</span></div><div><b>3</b><span>cultures at launch</span></div><div><b>Free</b><span>first preview</span></div></div></div></div></div>';
+}
+const sso=t=>'<button class="sso" data-act="social" data-p="Google"><span class="gi">G</span>'+t+' with Google</button><button class="sso" data-act="social" data-p="Apple"><span class="ai">A</span>'+t+' with Apple</button><div class="or">OR USE YOUR EMAIL</div>';
+VIEWS['/login']=function(){
+  return authPage('<a class="tab" href="#/signup">Create account</a><h1 style="font-size:clamp(2rem,4vw,3rem)">Welcome <span class="acc">back.</span></h1><p class="muted">Pick up where you left off: your saved mood boards and quotes are waiting.</p>'+sso('Sign in')+
+  '<form data-form="login" novalidate><div class="fld"><label>EMAIL</label><input name="email" type="email" value="aisha@example.com" placeholder="Sarah@example.com"></div><div class="fld"><label>PASSWORD</label><input name="pw" type="password" value="demo-password" placeholder="Your password"></div><div class="fld"><label style="font-weight:600;display:flex;gap:8px;align-items:center"><input type="checkbox" checked> Keep me signed in</label></div><div class="err" id="ferr"></div><button class="btn p lg" style="width:100%;justify-content:center">Log In</button></form><p class="small muted" style="margin-top:16px">New here? <a class="link" href="#/signup">Create Account &rarr;</a> &middot; <button class="link" data-act="forgot">Forgot password?</button></p>');
+};
+VIEWS['/signup']=function(){
+  return authPage('<a class="tab" href="#/login">Log in instead</a><h1 style="font-size:clamp(2rem,4vw,3rem)">Create your <span class="acc">account.</span></h1><p class="muted">Free to start. Your first set of designs is on us.</p>'+sso('Sign up')+
+  '<form data-form="signup" novalidate><div class="row"><div class="fld"><label>FIRST NAME *</label><input name="fn" value="Aisha"></div><div class="fld"><label>LAST NAME *</label><input name="ln" value="Khan"></div></div><div class="fld"><label>EMAIL *</label><input name="email" type="email" value="aisha@example.com"></div><div class="fld"><label>UK MOBILE NUMBER *</label><input name="mob" value="07700 900123"></div><div class="row"><div class="fld"><label>PASSWORD *</label><input name="pw" type="password" value="demo-password"></div><div class="fld"><label>CONFIRM PASSWORD *</label><input name="pw2" type="password" value="demo-password"></div></div><div class="fld"><label style="font-weight:600;display:flex;gap:8px;align-items:center"><input type="checkbox" name="tc" checked> I accept the&nbsp;<a class="link" href="#/terms">Terms</a>&nbsp;and&nbsp;<a class="link" href="#/privacy">Privacy Policy</a></label></div><div class="err" id="ferr"></div><button class="btn p lg" style="width:100%;justify-content:center">Create account</button></form>');
+};
+VIEWS['/verify']=function(){
+  return authPage('<a class="tab" href="#/signup">Back</a><h1 style="font-size:clamp(2rem,4vw,3rem)">Verify your <span class="acc">email.</span></h1><p class="muted">We sent a code to <b>'+esc(S.pend.email||'your email')+'</b>. In this demo the code is filled in for you.</p><form data-form="verify"><div class="fld"><label>VERIFICATION CODE</label><input name="code" value="123456"></div><div class="err" id="ferr"></div><button class="btn p lg" style="width:100%;justify-content:center">Verify and continue</button></form><p class="small muted" style="margin-top:14px"><button class="link" data-act="resend">Resend code</button></p>');
+};
+
+/* ----- home page ----- */
+const PICKS=[['diwali','hall','classic',11,'Diwali, banquet hall'],['eid','garden','evening',23,'Eid, garden marquee'],['lny','restaurant','lavish',35,'Lunar New Year, restaurant']];
+VIEWS['/']=function(){
+  const pi=S.heroPick||0,pk=PICKS[pi];
+  const cl=[['diwali','hall','lavish',12,'t1'],['eid','garden','classic',22,'t2'],['lny','restaurant','classic',32,'t3'],['diwali','restaurant','evening',14,'t4']];
+  const cat=(c,k,t,p,soon)=>'<div class="cat '+c+'"><span class="k">'+k+'</span><h3>'+t+'</h3><p>'+p+'</p>'+(soon?'<span class="soon">Coming soon</span>':'')+'</div>';
+  const steps=[['Step 01','Upload your space','Add a photo of your room, venue, rooftop or garden.'],['Step 02','Describe the atmosphere','"Warm candlelit dinner with soft florals."'],['Step 03','Watch it transform','Get four AI concepts, each checked against the culture card.'],['Step 04','Bring it to life','Connect with decorators, florists and planners.']];
+  return '<section class="hero"><div class="wrap grid"><div><div class="mono">AI venue visualisation + vendor booking</div><h1>Picture your celebration, before you <span class="acc">plan it.</span></h1><p class="muted" style="font-size:1.1rem;max-width:500px">Upload a photo of your space. Tell us how you want it to feel. See four culturally checked concepts of your actual room in about 90 seconds, then book the vendors who can make them real.</p><div style="display:flex;gap:10px;flex-wrap:wrap">'+startCta('Start with your space')+'<a class="btn lg" href="#/how">How it works</a></div><p class="small muted" style="margin-top:16px">Free to try &middot; No card required &middot; Diwali, Eid and Lunar New Year at launch</p></div>'+
+  '<div class="collage">'+cl.map(c=>'<canvas class="'+c[4]+'" data-paint="gal:'+c.slice(0,4).join(':')+'"></canvas>').join('')+'</div></div></section>'+
+  '<section class="sec alt"><div class="wrap center"><div class="mono">Design showcase</div><h2>Your venue, styled by AI.</h2><div style="max-width:820px;margin:22px auto 14px">'+cmpSlider('sample:'+pk[1],'gal:'+pk[0]+':'+pk[1]+':'+pk[2]+':'+pk[3])+'</div><div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">'+PICKS.map((p,i)=>'<span class="chip '+(i===pi?'on':'')+'" data-act="slidepick" data-i="'+i+'">'+p[4]+'</span>').join('')+'</div><p class="small muted" style="margin-top:14px">Results vary with your venue photo and preferences. The design keeps your room\'s structure and layout.</p></div></section>'+
+  '<section class="sec"><div class="wrap"><div class="grid g2" style="align-items:end"><div><div class="mono">How it works</div><h2 style="margin:0">Four steps. Ninety seconds. One celebration to remember.</h2></div><p class="muted" style="margin:0">No mood boards. No spreadsheets. No expensive planner. Four steps to your first results.</p></div><div class="grid g4" style="margin-top:28px">'+steps.map(s=>'<div class="card"><div class="mono" style="font-style:normal">'+s[0]+'</div><h3>'+s[1]+'</h3><p class="muted small" style="margin:0">'+s[2]+'</p></div>').join('')+'</div></div></section>'+
+  '<section class="sec alt"><div class="wrap"><div class="center"><div class="mono">Event types</div><h2>Designed for the moments that matter to you.</h2></div><div class="cats" style="margin-top:26px">'+
+  cat('c1','Category 1','Weddings','Ceremonies, receptions, welcome dinners, brunches.',1)+cat('c2','Category 2','Milestone Birthdays','Landmark birthdays at home or in a venue.',1)+
+  '<a class="cat c3" href="#/explore"><div class="th"><canvas data-paint="gal:diwali:hall:classic:11"></canvas><canvas data-paint="gal:eid:garden:classic:21"></canvas><canvas data-paint="gal:lny:restaurant:classic:31"></canvas></div><span class="k">Category 3 &middot; Available now</span><h3>Cultural Celebrations</h3><p>Diwali, Eid and Lunar New Year, with culture cards and expert sign-off.</p></a>'+
+  cat('c4','Category 4','Corporate and Brand Events','Launches, galas and team celebrations.',1)+cat('c5','Category 5','At-home Gatherings','Dinner parties, anniversaries, baby welcomes.',1)+cat('c6','Category 6','Anniversaries and Reunions','Family and friends, together again.',1)+'</div></div></section>'+
+  '<section class="sec"><div class="wrap"><div style="display:flex;justify-content:space-between;align-items:end;gap:10px;flex-wrap:wrap;margin-bottom:20px"><div><div class="mono">Marketplace</div><h2 style="margin:0">Top event vendors near you</h2></div><a class="btn" href="#/vendors">See all</a></div><div class="grid g4">'+VENDORS.filter(v=>v.rating>=4.8).slice(0,4).map(v=>vcard(v)).join('')+'</div></div></section>'+
+  '<section class="sec dark"><div class="wrap grid g2" style="gap:40px;align-items:center"><div><div class="mono" style="color:var(--lilac)">Vendor booking</div><h2>Quote, negotiate, book, pay.</h2><p style="opacity:.8">Send your chosen design to several vendors. Compare quotes, negotiate for up to three rounds, and pay through the platform. Your money is held until the job is done.</p><a class="btn b" href="#/how">See the booking process</a></div><div class="grid g2">'+[['Vendor categories','Decorators, florists, lighting, catering, DJs, photography'],['Verified vendors','Every vendor is approved by our team before going live'],['Multiple vendors','Book different services for the same event'],['Held payments','Released to the vendor when the service is complete']].map(x=>'<div style="border:1px solid rgba(255,255,255,.25);border-radius:16px;padding:16px"><b>'+x[0]+'</b><div class="small" style="opacity:.75;margin-top:4px">'+x[1]+'</div></div>').join('')+'</div></div></section>'+
+  '<section class="sec"><div class="wrap"><div class="center"><div class="mono">Plans</div><h2>Start free. Upgrade if you need more.</h2><p class="muted">Your first set of four designs is free. Bookings cost only what vendors quote.</p></div><div style="margin-top:26px">'+pricingBlock()+'</div></div></section>'+
+  '<section class="sec alt"><div class="wrap center"><h2>Join hosts planning with EventCulture.</h2><div class="grid g3 trio" style="margin-top:22px;text-align:left">'+[['It\'s instant','Upload a photo, describe the feeling. Four concepts in about 90 seconds, no planner required.'],['It\'s worth it','Free to try. You pay a vendor\'s quote through the platform, and it is held until the job is done.'],['You\'re protected','Every vendor is verified by our team. Payments are held until the service is complete. Your photos stay yours.']].map(x=>'<div class="card" style="background:#fff"><h3>'+x[0]+'</h3><p class="muted small" style="margin:0">'+x[1]+'</p></div>').join('')+'</div></div></section>'+
+  '<section class="sec"><div class="wrap" style="max-width:780px"><div class="center"><h2>Questions</h2></div>'+faqList(5)+'<div class="center" style="margin-top:20px"><a class="btn" href="#/faq">All FAQs</a></div></div></section>'+
+  '<section class="sec center" style="background:var(--lilac)"><div class="wrap"><h2>Now let\'s see your celebration.</h2><p>Take one photo of the space. Tell us how you want it to feel. Four visions in about 90 seconds, then a calm next step.</p>'+startCta('Start with your space')+'<p class="small" style="margin-top:12px">Free to try &middot; No card required &middot; 90-second visualisation</p></div></section>'+footer();
+};
+
+/* ===== START ===== */
+render();
+
+</script>
+</body></html>
