@@ -141,6 +141,23 @@ details{border-bottom:1px solid var(--chalk);padding:16px 0}summary{cursor:point
 .ov .big{font:500 clamp(2rem,3.6vw,3.2rem)/1.1 "Bricolage Grotesque",sans-serif;letter-spacing:-.02em}.ov .stats{display:flex;gap:30px}.ov .stats b{display:block;font:600 1.8rem "Bricolage Grotesque"}.ov .stats span{font-size:.8rem;opacity:.8}
 .menu a{display:block;padding:11px 4px;border-bottom:1px solid var(--chalk);text-decoration:none;font:600 1.15rem "Bricolage Grotesque",sans-serif}.menu a:hover{color:var(--pink)}
 .trio .card h3{font-size:1.3rem}
+/* shop the look */
+.shop{display:grid;grid-template-columns:minmax(0,1.8fr) minmax(260px,1fr);gap:18px;margin-bottom:24px;align-items:start}
+.shopimg{position:relative;border-radius:20px;overflow:hidden;background:#ddd}.shopimg canvas{border-radius:0}
+.shoptag{position:absolute;left:12px;bottom:12px;background:#fff;border-radius:999px;padding:4px 12px;font-size:.8rem;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.hspot{position:absolute;transform:translate(-50%,-50%);width:24px;height:24px;border-radius:50%;background:#fff;border:2px solid rgba(0,0,0,.18);box-shadow:0 2px 10px rgba(0,0,0,.4);padding:0;cursor:pointer;z-index:2}
+.hspot::after{content:"";position:absolute;inset:-2px;border-radius:50%;border:2px solid #fff;animation:blip 1.7s ease-out infinite;pointer-events:none}
+.hspot:hover,.hspot.on{background:var(--pink);border-color:#fff}.hspot.on::after{border-color:var(--pink)}
+@keyframes blip{0%{transform:scale(1);opacity:.95}100%{transform:scale(2.6);opacity:0}}
+.shopside{background:var(--mist);border-radius:20px;padding:20px}
+.hotlist{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.hotitem,.hv{display:flex;gap:10px;align-items:center;text-align:left;width:100%;background:#fff;border:1.5px solid var(--chalk);border-radius:14px;padding:9px 12px;cursor:pointer;font:inherit;color:inherit}
+.hotitem:hover,.hv:hover{border-color:var(--ink)}
+.hotitem small,.hv small{display:block;color:var(--muted);font-size:.78rem}
+.hn{flex:none;width:24px;height:24px;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;font-size:.75rem;font-weight:700}
+.hotv{display:flex;flex-direction:column;gap:8px}.hv .sw{flex:none;width:34px;height:34px;border-radius:10px}
+@media(max-width:900px){.shop{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){.hspot::after{animation:none}}
 </style></head><body>
 <div id="demobar"></div><header id="hdr"></header><main id="app"></main>
 <div id="modal"></div><div id="toast"></div><div id="guide"></div>
@@ -1151,6 +1168,89 @@ VIEWS['/']=function(){
   '<section class="sec"><div class="wrap" style="max-width:780px"><div class="center"><h2>Questions</h2></div>'+faqList(5)+'<div class="center" style="margin-top:20px"><a class="btn" href="#/faq">All FAQs</a></div></div></section>'+
   '<section class="sec center" style="background:var(--lilac)"><div class="wrap"><h2>Now let\'s see your celebration.</h2><p>Take one photo of the space. Tell us how you want it to feel. Four visions in about 90 seconds, then a calm next step.</p>'+startCta('Start with your space')+'<p class="small" style="margin-top:12px">Free to try &middot; No card required &middot; 90-second visualisation</p></div></section>'+footer();
 };
+
+/* ===== Shop the look: blinking hotspots on a design, linked to vendor categories ===== */
+const HOTS={
+  diwali:[
+    {x:.50,y:.10,item:'Marigold garlands',cat:'Florists',note:'Fresh or artificial marigold garlands and strands.'},
+    {x:.74,y:.21,item:'String lights',cat:'Lighting',note:'Warm fairy lights and canopy lighting.'},
+    {x:.50,y:.84,item:'Rangoli at the entrance',cat:'Decorators',note:'Hand-made or powder rangoli designs.'},
+    {x:.22,y:.91,item:'Diyas (oil lamps)',cat:'Lighting',note:'Diya displays and lamp arrangements.'},
+    {x:.20,y:.36,item:'Hanging strands',cat:'Decorators',note:'Floral and bead strands that hang from the ceiling.'}
+  ],
+  eid:[
+    {x:.50,y:.20,item:'Crescent and star centrepiece',cat:'Decorators',note:'Backdrops and arches with crescent and star motifs.'},
+    {x:.08,y:.30,item:'Draped curtains',cat:'Draping and stages',note:'Ceiling drapes, curtains and stage backdrops.'},
+    {x:.30,y:.22,item:'Lanterns (fanoos)',cat:'Lighting',note:'Fanoos lanterns and warm lighting.'},
+    {x:.72,y:.08,item:'Greenery garland',cat:'Decorators',note:'Green and gold garlands along the top.'},
+    {x:.68,y:.64,item:'Table lanterns',cat:'Decorators',note:'Lanterns and centrepieces for the tables.'}
+  ],
+  lny:[
+    {x:.30,y:.18,item:'Red lanterns',cat:'Lighting',note:'Hanging lantern ceilings and lighting.'},
+    {x:.06,y:.40,item:'Couplet banners',cat:'Decorators',note:'Red and gold banners with calligraphy.'},
+    {x:.13,y:.70,item:'Plum blossom',cat:'Florists',note:'Blossom branches and red-and-gold flowers.'},
+    {x:.50,y:.29,item:'Gold knots',cat:'Decorators',note:'Chinese knots and gold accents.'},
+    {x:.50,y:.91,item:'Gold ingots',cat:'Decorators',note:'Gold ingot table and floor decor.'}
+  ]
+};
+let HOT=-1;
+function hotDesign(){
+  const ev=S.events.find(e=>e.id===S.cur);if(!ev)return null;
+  const ds=S.designs.filter(d=>d.eventId===ev.id);return ds.find(d=>d.id===S.viewD)||ds[0]||null;
+}
+function hotVendors(h,cid){
+  const inCat=VENDORS.filter(v=>v.cat===h.cat);
+  const match=inCat.filter(v=>v.cultures.includes(cid));
+  return {all:inCat,match:match.length?match:inCat,exact:match.length>0};
+}
+function hotSide(){
+  const d=hotDesign();if(!d)return '';
+  const hs=HOTS[d.culture]||[];
+  if(HOT<0||!hs[HOT]){
+    return '<div class="mono">Shop the look</div><h3 style="margin:.2em 0 .4em">Explore vendors for each item</h3><p class="muted small">Click a blinking circle on the image to see the vendors who can supply that item.</p><div class="hotlist">'+hs.map((h,i)=>'<button class="hotitem" data-act="hot" data-i="'+i+'"><span class="hn">'+(i+1)+'</span><span><b>'+esc(h.item)+'</b><small>'+esc(h.cat)+' &middot; '+(n=>n+' vendor'+(n>1?'s':''))(hotVendors(h,d.culture).match.length)+'</small></span></button>').join('')+'</div>';
+  }
+  const h=hs[HOT],v=hotVendors(h,d.culture),nm=cult(d.culture).name;
+  return '<button class="link small" data-act="hotback">&larr; All items</button><div class="mono" style="margin-top:8px">Selected item</div><h3 style="margin:.2em 0 .3em">'+esc(h.item)+'</h3><p class="muted small">'+esc(h.note)+'</p>'+
+  '<div class="small" style="margin:6px 0 10px"><b>'+v.match.length+' vendor'+(v.match.length>1?'s':'')+'</b> in '+esc(h.cat.toLowerCase())+(v.exact?', listed for '+esc(nm)+' events':' (none list '+esc(nm)+' yet)')+'</div>'+
+  '<div class="hotv">'+v.match.slice(0,3).map(x=>'<button class="hv" data-act="vprofile" data-id="'+x.id+'"><span class="sw" style="background:linear-gradient(135deg,'+x.c[0]+','+x.c[1]+')"></span><span><b>'+esc(x.name)+'</b><small>'+esc(x.city)+' &middot; &#9733; '+x.rating+' &middot; '+x.price+'</small></span></button>').join('')+'</div>'+
+  '<button class="btn p" style="width:100%;margin-top:12px" data-act="hotgo">See all '+esc(h.cat.toLowerCase())+' &rarr;</button>';
+}
+function hotViewer(){
+  const d=hotDesign();if(!d)return '';
+  const hs=HOTS[d.culture]||[];
+  return '<div class="shop"><div class="shopimg"><canvas class="art" data-paint="design:'+d.id+'" style="border-radius:0"></canvas>'+
+  hs.map((h,i)=>'<button class="hspot'+(i===HOT?' on':'')+'" style="left:'+(h.x*100)+'%;top:'+(h.y*100)+'%" data-act="hot" data-i="'+i+'" aria-label="Explore vendors for '+esc(h.item)+'"></button>').join('')+
+  '<span class="shoptag">'+esc(d.vname)+'</span></div><aside class="shopside" id="shopside">'+hotSide()+'</aside></div>';
+}
+function hotRefresh(){
+  const s=$('#shopside');if(s)s.innerHTML=hotSide();
+  $$('.shopimg .hspot').forEach((b,i)=>b.classList.toggle('on',i===HOT));
+}
+ACT.hot=el=>{HOT=+el.dataset.i;hotRefresh()};
+ACT.hotback=()=>{HOT=-1;hotRefresh()};
+ACT.dview=el=>{S.viewD=el.dataset.id;HOT=-1;save();render();window.scrollTo({top:0,behavior:'smooth'})};
+ACT.hotgo=()=>{
+  const d=hotDesign();if(!d||HOT<0)return;const h=HOTS[d.culture][HOT],v=hotVendors(h,d.culture);
+  S.vf=dvf();S.vf.cat=[h.cat];if(v.exact)S.vf.ev=[d.culture];
+  S.vfFrom={item:h.item,cat:h.cat,culture:d.culture};save();go('/vendors');
+};
+const _results=VIEWS['/results'];
+VIEWS['/results']=function(){
+  HOT=-1;S.vfFrom=null;
+  let html=_results();
+  if(S.role!=='customer'||html.indexOf('<div class="grid g2"><div class="dc">')<0)return html;
+  html=html.replace('<div class="grid g2"><div class="dc">',hotViewer()+'<div class="grid g2"><div class="dc">');
+  html=html.replace(/<canvas class="art" data-paint="design:([^"]+)" style="border-radius:0"><\/canvas><div class="bd">/g,'<canvas class="art" data-act="dview" data-id="$1" data-paint="design:$1" style="border-radius:0;cursor:pointer" title="Click to open this design above"></canvas><div class="bd">');
+  return html;
+};
+const _vendors=VIEWS['/vendors'];
+VIEWS['/vendors']=function(){
+  let html=_vendors();const f=S.vfFrom;
+  if(f)html=html.replace('<div class="vlayout">','<div class="banner" style="background:#fdeaf3"><div class="grow"><b>Showing '+esc(f.cat.toLowerCase())+' for &ldquo;'+esc(f.item)+'&rdquo;</b><div class="small">Filtered from your '+esc(cult(f.culture).name)+' design. Change the filters on the left to widen it.</div></div><a class="btn sm" href="#/results" data-act="hotclear">Back to my design</a></div><div class="vlayout">');
+  return html;
+};
+ACT.hotclear=()=>{S.vfFrom=null};
+const _vclear=ACT.vclear;ACT.vclear=()=>{S.vfFrom=null;_vclear()};
 
 /* ===== START ===== */
 render();

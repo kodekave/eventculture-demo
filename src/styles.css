@@ -135,3 +135,20 @@ details{border-bottom:1px solid var(--chalk);padding:16px 0}summary{cursor:point
 .ov .big{font:500 clamp(2rem,3.6vw,3.2rem)/1.1 "Bricolage Grotesque",sans-serif;letter-spacing:-.02em}.ov .stats{display:flex;gap:30px}.ov .stats b{display:block;font:600 1.8rem "Bricolage Grotesque"}.ov .stats span{font-size:.8rem;opacity:.8}
 .menu a{display:block;padding:11px 4px;border-bottom:1px solid var(--chalk);text-decoration:none;font:600 1.15rem "Bricolage Grotesque",sans-serif}.menu a:hover{color:var(--pink)}
 .trio .card h3{font-size:1.3rem}
+/* shop the look */
+.shop{display:grid;grid-template-columns:minmax(0,1.8fr) minmax(260px,1fr);gap:18px;margin-bottom:24px;align-items:start}
+.shopimg{position:relative;border-radius:20px;overflow:hidden;background:#ddd}.shopimg canvas{border-radius:0}
+.shoptag{position:absolute;left:12px;bottom:12px;background:#fff;border-radius:999px;padding:4px 12px;font-size:.8rem;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.hspot{position:absolute;transform:translate(-50%,-50%);width:24px;height:24px;border-radius:50%;background:#fff;border:2px solid rgba(0,0,0,.18);box-shadow:0 2px 10px rgba(0,0,0,.4);padding:0;cursor:pointer;z-index:2}
+.hspot::after{content:"";position:absolute;inset:-2px;border-radius:50%;border:2px solid #fff;animation:blip 1.7s ease-out infinite;pointer-events:none}
+.hspot:hover,.hspot.on{background:var(--pink);border-color:#fff}.hspot.on::after{border-color:var(--pink)}
+@keyframes blip{0%{transform:scale(1);opacity:.95}100%{transform:scale(2.6);opacity:0}}
+.shopside{background:var(--mist);border-radius:20px;padding:20px}
+.hotlist{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.hotitem,.hv{display:flex;gap:10px;align-items:center;text-align:left;width:100%;background:#fff;border:1.5px solid var(--chalk);border-radius:14px;padding:9px 12px;cursor:pointer;font:inherit;color:inherit}
+.hotitem:hover,.hv:hover{border-color:var(--ink)}
+.hotitem small,.hv small{display:block;color:var(--muted);font-size:.78rem}
+.hn{flex:none;width:24px;height:24px;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;font-size:.75rem;font-weight:700}
+.hotv{display:flex;flex-direction:column;gap:8px}.hv .sw{flex:none;width:34px;height:34px;border-radius:10px}
+@media(max-width:900px){.shop{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){.hspot::after{animation:none}}
